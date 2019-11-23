@@ -1,0 +1,35 @@
+# logs
+logs
+*.log
+npm-debug.log*
+
+# runtime data
+*.pid
+
+# node
+node_modules/
+.npm
+
+# environment config
+.env
+
+# MacOS X
+.DS_Store
+
+# Win
+*.db
+
+# output packages
+*.zip
+*.tar
+*.tgz
+*.tar.gz
+
+# collider.jam
+units.json
+*.local
+
+# collider.jam output
+out*
+dist*
+
