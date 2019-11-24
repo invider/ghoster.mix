@@ -1,13 +1,22 @@
-# some comments are welcome
+# some comment
+2
+5
+5
+next "super string in here"
 
 @inky
-> > V V
-wall
+> > v v
+wall # wall id
 
 @blinky
 
 round:
-    > V < ^
+    > v < ^
+
+check:
+
+other:
+
 
 @clyde
 

@@ -29,28 +29,28 @@ module.exports = function setup() {
     })
     */
 
-    lab.spawn(dna.dot.Space, {
+    // ghost space construction
+    const space = lab.spawn(dna.dot.Space, {
         name: 'space',
         width: 4,
         height: 4,
     })
+    space.token = dna.dot.token
 
     const inky = new dna.dot.Ghost({
         x: 0,
         y: 0,
     })
-    lab.space.ghost.push(inky)
+    space.ghost.push(inky)
 
-    lab.spawn(dna.hud.GhostView, {
-        space: lab.space
-    })
-
+    // teach inky everything
     Object.values(lib.dict).forEach(f => {
         inky.dict[f.name] = f
     })
-
     inky.route = $.dot.sys
 
-    //setTimeout(() => inky.exec(lib.dict.right), 4000)
-    //setTimeout(() => inky.exec(lib.dict.down), 5000)
+    // construct the view
+    lab.spawn(dna.hud.GhostView, {
+        space: space
+    })
 }
