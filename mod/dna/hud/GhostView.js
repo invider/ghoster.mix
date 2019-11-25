@@ -47,12 +47,15 @@ GhostView.prototype.draw = function() {
     for (let iy = 0; iy < this.gh; iy++) {
         for (let ix = 0; ix < this.gw; ix++) {
             const token = this.space.get(gx + ix, gy + iy)
-            if (token < 0) {
-                fill(.05, 0, .2, 0.4)
-                rect(ix*s, iy*s, s, s)
-            } else if (token > 0) {
+            if (token.type === dna.dot.token.NIL) {
+                //fill(.05, 0, .2, 0.4)
+                //rect(ix*s, iy*s, s, s)
+            } else if (token.type === dna.dot.token.CHAR) {
+                font('30px coolville')
+                baseMiddle()
+                alignCenter()
                 fill(.05, .7, .4)
-                rect(ix*s+M, iy*s+M, s-DM, s-DM)
+                text(token.val, ix*s+hs, iy*s+hs)
             } else {
             }
         }

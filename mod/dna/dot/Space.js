@@ -7,10 +7,12 @@ function Space(st) {
     this.name = st.name
     this.width = st.width
     this.height = st.height
+}
 
-    this.touchArea(0, 0, this.width, this.height, () => 0)
-    this.arena[2] = 1
-    this.arena[5] = 1
+Space.prototype.populate = function() {
+    this.touchArea(0, 0, this.width, this.height, () => this.token())
+    this.arena[2] = this.token('x')
+    this.arena[5] = this.token('v')
 }
 
 Space.prototype.get = function(x, y) {
@@ -18,16 +20,16 @@ Space.prototype.get = function(x, y) {
     return this.arena[y*this.width + x]
 }
 
-Space.prototype.set = function(x, y, v) {
+Space.prototype.set = function(x, y, v, t) {
     if (x < 0 || x >= this.width || y < 0 || y >= this.height) return false
-    this.arena[y*this.width + x] = v
+    this.arena[y*this.width + x] = this.token(v, t)
     return true
 }
 
-Space.prototype.put = function(x, y, v) {
+Space.prototype.put = function(x, y, v, t) {
     if (x < 0 || x >= this.width || y < 0 || y >= this.height) return -1
-    const p = this.arena[y*this.width + x] = v
-    this.arena[y*this.width + x] = v
+    const p = this.arena[y*this.width + x]
+    this.arena[y*this.width + x] = this.token(v, t)
     return p
 }
 

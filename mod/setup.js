@@ -1,34 +1,4 @@
 module.exports = function setup() {
-    /*
-    // create top container
-    // it is the central points for event handling to all components
-    const hud = sys.spawn('hud/Hud', {
-        Z: 1,
-        name: 'hud',
-    })
-
-    const l1 = sys.spawn('hud/gadget/Label', {
-        name: 'label1',
-        x: 30,
-        y: 40,
-        text: 'dotter',
-    }, 'hud')
-    sys.augment(l1, dna.hud.trait.Draggable)
-    l1.setStyle('title')
-
-    const eyes = sys.augment(sys.spawn('hud/gadget/Eyes', {
-        name: 'eyes',
-        x: ctx.width - 100,
-        y: 20
-    }, 'hud'), dna.hud.trait.Draggable)
-    sys.after(trap, 'mouseDown', function(e) {
-        eyes.pupilR = 8
-    })
-    sys.after(trap, 'mouseUp', function(e) {
-        eyes.pupilR = 6
-    })
-    */
-
     // ghost space construction
     const space = lab.spawn(dna.dot.Space, {
         name: 'space',
@@ -36,6 +6,7 @@ module.exports = function setup() {
         height: 4,
     })
     space.token = dna.dot.token
+    space.populate()
 
     const inky = new dna.dot.Ghost({
         x: 0,

@@ -10,9 +10,14 @@ const LOC = 6
 const ROUT = 7
 const LIST = 11
 
+function Token() {}
+
 function token(val, type) {
     // TODO lookup in the buffer first
-    const t = {}
+
+    if (val instanceof Token) return val // value already tokenized
+
+    const t = new Token()
     t.val = val
 
     if (val === undefined || val === null) {

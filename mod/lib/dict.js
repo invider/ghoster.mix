@@ -18,3 +18,4 @@ function right(g) {
 function dot(g) {
     g.spawn(1)
 }
+
