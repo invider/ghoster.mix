@@ -2,7 +2,9 @@
 
 @inky
 
->> blue . > blue . vv<<
+> blue . >>> blue . vv<<
+"b" .
+>> "text value" .
 
 @blinky
 

@@ -25,4 +25,11 @@ module.exports = function setup() {
     lab.spawn(dna.hud.GhostView, {
         space: space
     })
+
+    lab.spawn(dna.hud.TractView, {
+        name: 'inkyTract',
+        ghost: inky,
+        x: rx(0.75),
+        y: ry(0.1),
+    })
 }

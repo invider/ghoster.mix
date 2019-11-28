@@ -187,22 +187,32 @@ function parse(src) {
     const lex = makeLex(src)
     const list = []
 
-    let token
-    while(token = lex.next()) {
-        log('#' + token.type + ' @' + token.tab + ' [' + token.val + ']')
+    let t
+    const tok = dna.dot.token
 
-        switch (token.val) {
-        case 'left': list.push(dna.dot.token('left')); break;
-        case 'right': list.push(dna.dot.token('right')); break;
-        case 'up': list.push(dna.dot.token('up')); break;
-        case 'down': list.push(dna.dot.token('down')); break;
-        case 'dot': list.push(dna.dot.token('dot')); break;
-        case 'lick': list.push(dna.dot.token('lick')); break;
-        case 'eat': list.push(dna.dot.token('eat')); break;
-        default:
-            list.push(dna.dot.token(token.val)); break;
+    while(t = lex.next()) {
+        log('#' + t.type + ' @' + t.tab + ' [' + t.val + ']')
+
+        switch (t.type) {
+        case SYM:
+            if (t.val === 'true'
+                    || t.val === 'yes'
+                    || t.val === 'ok') {
+                list.push( tok(true) );
+            } else if (t.val === 'false'
+                    || t.val === 'no'
+                    || t.val === 'cancel') {
+                list.push( tok(false) );
+            } else {
+                list.push( tok(t.val) );
+            }
+            break;
+
+        case NUM: list.push( tok(t.val) ); break;
+        case STR: list.push( tok(t.val) ); break;
         }
     }
+    console.table(list)
     return list
 }
 

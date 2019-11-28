@@ -10,6 +10,7 @@ const STR = 6
 const LOC = 7
 const ROUT = 8
 const LIST = 11
+const UNKNOWN = 99
 
 function Token() {}
 
@@ -41,10 +42,14 @@ function token(val, type) {
 
     } else if (Array.isArray(val)) {
         t.type = LIST
+
     } else if (typeof val === 'object') {
         t.type = LOC
         t.x = val.x
         t.y = val.y
+
+    } else {
+        t.type = UNKNOWN
     }
 
     return t
@@ -60,4 +65,5 @@ token.STR = STR
 token.LOC = LOC
 token.ROUT = ROUT
 token.LIST = LIST
+token.UNKNOWN = UNKNOWN
 

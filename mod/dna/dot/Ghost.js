@@ -28,14 +28,21 @@ function Ghost(st) {
 
 Ghost.prototype.step = function() {
     if (this.todo.length > 0) {
+        //console.table(this.tract)
+
         const t = this.todo[0]
         this.todo.splice(0, 1)
 
-        // try to bind
-        const f = this.dict[t.val]
-        if (f) {
-            log('doing ' + t.val)
-            f(this)
+        if (t.type === this.space.token.SYM) {
+            // try to bind
+            const f = this.dict[t.val]
+            if (f) {
+                log('doing ' + t.val)
+                f(this)
+            }
+        } else {
+            log('pushing #' + t.type + ' [' + t.val + ']')
+            this.tract.push(t)
         }
     }
 }

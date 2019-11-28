@@ -17,7 +17,7 @@ Space.prototype.populate = function() {
 }
 
 Space.prototype.get = function(x, y) {
-    if (x < 0 || x >= this.width || y < 0 || y >= this.height) return -1
+    if (x < 0 || x >= this.width || y < 0 || y >= this.height) return 
     return this.arena[y*this.width + x]
 }
 
