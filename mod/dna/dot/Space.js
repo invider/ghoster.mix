@@ -13,6 +13,7 @@ Space.prototype.populate = function() {
     this.touchArea(0, 0, this.width, this.height, () => this.token())
     this.arena[2] = this.token('x')
     this.arena[5] = this.token('v')
+    this.arena[4] = this.token('#ff0000', this.token.DOT )
 }
 
 Space.prototype.get = function(x, y) {

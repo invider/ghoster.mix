@@ -11,6 +11,7 @@ module.exports = function setup() {
     const inky = new dna.dot.Ghost({
         x: 0,
         y: 0,
+        space: space,
     })
     space.ghost.push(inky)
 
@@ -18,7 +19,7 @@ module.exports = function setup() {
     Object.values(lib.dict).forEach(f => {
         inky.dict[f.name] = f
     })
-    inky.route = $.dot.sys
+    inky.todo = $.dot.sys
 
     // construct the view
     lab.spawn(dna.hud.GhostView, {

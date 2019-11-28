@@ -1,13 +1,14 @@
 'use strict'
 
 const NIL = 0
-const SYM = 1
-const BOOL = 2
-const NUM = 3
-const CHAR = 4
-const STR = 5
-const LOC = 6
-const ROUT = 7
+const DOT = 1
+const SYM = 2
+const BOOL = 3
+const NUM = 4
+const CHAR = 5
+const STR = 6
+const LOC = 7
+const ROUT = 8
 const LIST = 11
 
 function Token() {}
@@ -37,6 +38,7 @@ function token(val, type) {
         } else {
             t.type = STR
         }
+
     } else if (Array.isArray(val)) {
         t.type = LIST
     } else if (typeof val === 'object') {
@@ -49,6 +51,7 @@ function token(val, type) {
 }
 
 token.NIL = NIL
+token.DOT = DOT
 token.SYM = SYM
 token.BOOL = BOOL
 token.NUM = NUM

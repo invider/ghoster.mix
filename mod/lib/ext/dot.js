@@ -99,6 +99,9 @@ function makeLex(src) {
             case '<': return { type: SYM, tab: tab, val: 'left' };
             case '>': return { type: SYM, tab: tab, val: 'right' };
             case 'v': return { type: SYM, tab: tab, val: 'down' };
+            case '.': return { type: SYM, tab: tab, val: 'dot' };
+            case '-': return { type: SYM, tab: tab, val: 'lick' };
+            case '`': return { type: SYM, tab: tab, val: 'eat' };
         }
 
         if (c === '"') {
@@ -193,8 +196,11 @@ function parse(src) {
         case 'right': list.push(dna.dot.token('right')); break;
         case 'up': list.push(dna.dot.token('up')); break;
         case 'down': list.push(dna.dot.token('down')); break;
-        case '.': list.push(dna.dot.token('dot')); break;
-        default: log('skipping ' + token)
+        case 'dot': list.push(dna.dot.token('dot')); break;
+        case 'lick': list.push(dna.dot.token('lick')); break;
+        case 'eat': list.push(dna.dot.token('eat')); break;
+        default:
+            list.push(dna.dot.token(token.val)); break;
         }
     }
     return list

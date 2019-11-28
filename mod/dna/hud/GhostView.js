@@ -11,7 +11,7 @@ function GhostView(st) {
     this.gy = 0
     this.gw = 0
     this.gh = 0
-    this.scale = 32
+    this.scale = 64
     this.space = st.space
 
     this.dt = 0
@@ -30,6 +30,8 @@ GhostView.prototype.draw = function() {
     // adjust ghost space width and height
     const s = this.scale
     const hs = s/2
+    const M = s * .6
+    const M2 = M*2
     const gx = this.gx
     const gy = this.gy
     const gw = floor(this.w / s)
@@ -50,12 +52,15 @@ GhostView.prototype.draw = function() {
             if (token.type === dna.dot.token.NIL) {
                 //fill(.05, 0, .2, 0.4)
                 //rect(ix*s, iy*s, s, s)
-            } else if (token.type === dna.dot.token.CHAR) {
+            } else if (token.type === dna.dot.token.CHAR ) {
                 font('30px coolville')
                 baseMiddle()
                 alignCenter()
                 fill(.05, .7, .4)
                 text(token.val, ix*s+hs, iy*s+hs)
+            } else if ( token.type === dna.dot.token.DOT ) {
+                fill(token.val)
+                rect(ix*s+M, iy*s+M, s-M2, s-M2)
             } else {
             }
         }

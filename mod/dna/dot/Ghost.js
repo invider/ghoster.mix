@@ -15,19 +15,21 @@ function Ghost(st) {
     this.name = ghostNames[instances] || ghostNames[0] + instances
 
     this.mood = 0
+    this.ink = 100 // ghost mana and energy
     this.dict = {}
+    this.todo = [] // list of data and routine tokens
+    this.stack = [] // call stack
     this.tract = [] // list of eaten stuff
-    this.route = [] // list of routines to do
-    this.track = [] // call stack
 
     this.x = st.x
     this.y = st.y
+    this.space = st.space
 }
 
 Ghost.prototype.step = function() {
-    if (this.route.length > 0) {
-        const t = this.route[0]
-        this.route.splice(0, 1)
+    if (this.todo.length > 0) {
+        const t = this.todo[0]
+        this.todo.splice(0, 1)
 
         // try to bind
         const f = this.dict[t.val]
@@ -41,14 +43,3 @@ Ghost.prototype.step = function() {
 Ghost.prototype.exec = function(t) {
     t(this)
 }
-
-Ghost.prototype.eat = function(token) {
-}
-
-Ghost.prototype.spew = function() {
-}
-
-Ghost.prototype.spawn = function(token) {
-    this.space.set(this.x, this.y, token)
-}
-
