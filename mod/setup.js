@@ -2,8 +2,8 @@ module.exports = function setup() {
     // ghost space construction
     const space = lab.spawn(dna.dot.Space, {
         name: 'space',
-        width: 4,
-        height: 4,
+        width: 32,
+        height: 32,
     })
     space.token = dna.dot.token
     space.populate()
