@@ -37,5 +37,5 @@ function eat(g) {
 }
 
 function blue(g) {
-    g.tract.push( g.space.token('#0000ff', g.space.token.DOT ) )
+    g.tract.push( g.space.token('#0000ff', g.space.token.DOT, [0, 0, 255] ) )
 }

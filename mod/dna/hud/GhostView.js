@@ -15,7 +15,7 @@ function GhostView(st) {
     this.font = '50px coolville'
     this.font2 = '20px coolville'
 
-    this.space = st.space
+    augment(this, st)
 
     this.dt = 0
     this.period = 1

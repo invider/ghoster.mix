@@ -23,13 +23,30 @@ module.exports = function setup() {
 
     // construct the view
     lab.spawn(dna.hud.GhostView, {
-        space: space
+        Z: 1,
+        name: 'gspace',
+        space: space,
+        x: rx(.05),
+        y: ry(.05),
+        w: rx(.6),
+        h: ry(.7),
     })
 
     lab.spawn(dna.hud.TractView, {
+        Z: 2,
         name: 'inkyTract',
         ghost: inky,
-        x: rx(0.75),
-        y: ry(0.1),
+        x: rx(.7),
+        y: ry(.5),
+    })
+
+    lab.spawn(dna.hud.DotView, {
+        Z: 5,
+        name: 'dspace',
+        space: space,
+        x: rx(.7),
+        y: ry(.05),
+        w: rx(.25),
+        h: rx(.25),
     })
 }

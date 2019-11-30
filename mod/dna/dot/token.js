@@ -14,7 +14,7 @@ const UNKNOWN = 99
 
 function Token() {}
 
-function token(val, type) {
+function token(val, type, meta) {
     // TODO lookup in the buffer first
 
     if (val instanceof Token) return val // value already tokenized
@@ -32,6 +32,13 @@ function token(val, type) {
     } else if (typeof val === 'string') {
         if (type) {
             t.type = type
+
+            if (t.type === DOT) {
+                t.r = meta[0]
+                t.g = meta[1]
+                t.b = meta[2]
+            }
+
         } else if (val.length === 1) {
             t.type = CHAR
         } else if (val.length > 1 && !/\s/.test(val)) {
