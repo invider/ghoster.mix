@@ -14,6 +14,23 @@ const UNKNOWN = 99
 
 function Token() {}
 
+function ihex(c) {
+    const code = c.toUpperCase().charCodeAt(0) - 48
+    if (code >= 0 && code < 10) return code
+    else if (code >= 17 && code < 23) return code - 7
+    else return -1
+}
+
+function hex(str) {
+    let d = 0
+    for (let i = 0; i < str.length; i++) {
+        const n = ihex(str.charAt(i))
+        if (n < 0) d = 0
+        else d = d*16 + n
+    }
+    return d
+}
+
 function token(val, type, meta) {
     // TODO lookup in the buffer first
 
@@ -34,9 +51,10 @@ function token(val, type, meta) {
             t.type = type
 
             if (t.type === DOT) {
-                t.r = meta[0]
-                t.g = meta[1]
-                t.b = meta[2]
+                const s = t.val.substring(1)
+                t.r = hex(s.substring(0, 2))
+                t.g = hex(s.substring(2, 4))
+                t.b = hex(s.substring(4, 6))
             }
 
         } else if (val.length === 1) {

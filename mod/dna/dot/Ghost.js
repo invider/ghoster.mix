@@ -36,9 +36,13 @@ Ghost.prototype.step = function() {
         if (t.type === this.space.token.SYM) {
             // try to bind
             const f = this.dict[t.val]
-            if (f) {
-                log('doing ' + t.val)
+            if (isFun(f)) {
                 f(this)
+            } else if (f) {
+                this.tract.push(f)
+            } else {
+                log('unable to find [' + t.val + ']')
+                console.dir(this.dict)
             }
         } else {
             log('pushing #' + t.type + ' [' + t.val + ']')

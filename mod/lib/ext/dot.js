@@ -166,7 +166,7 @@ function makeLex(src) {
         }
 
         let sym = ''
-        while (isAlpha(c)) {
+        while ( isAlpha(c) || isDigit(c) ) {
             sym += c
             c = src.charAt(cur++)
         }

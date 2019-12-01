@@ -15,10 +15,11 @@ function GhostView(st) {
     this.font = '50px coolville'
     this.font2 = '20px coolville'
 
-    augment(this, st)
-
     this.dt = 0
     this.period = 1
+
+    augment(this, st)
+
 }
 
 GhostView.prototype.evo = function(dt) {
@@ -58,7 +59,8 @@ GhostView.prototype.draw = function() {
             rect(ix*s, iy*s, s, s)
 
             if (!token || token.type === dna.dot.token.NIL) {
-                //fill(.05, 0, .2, 0.4)
+                fill(.05, 0, .2, .6)
+                circle(ix*s + s/2, iy*s + s/2, s*0.03)
                 //rect(ix*s, iy*s, s, s)
 
             } else if (token.type === dna.dot.token.CHAR ) {
