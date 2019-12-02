@@ -37,17 +37,7 @@ v
 "b" .
 >> "text value" .
 
-blinky
-
-round:
-    > v < ^
-
-check:
-
-other:
-
-@clyde
-
-@inky
+10 20 30 add add
+2 mul
 
 # eof

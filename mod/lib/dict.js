@@ -36,8 +36,25 @@ function eat(g) {
     g.tract.push( g.space.put(g.x, g.y, null) )
 }
 
-/*
-function blue(g) {
-    g.tract.push( g.space.token('#0000ff', g.space.token.DOT, [0, 0, 255] ) )
+function add(g) {
+    const a = g.tract.pop()
+    const b = g.tract.pop()
+
+    if (a.type !== g.space.token.NUM || b.type !== g.space.token.NUM) {
+        log('unable to add values ' + a.val + ' and ' + b.val)
+    } else {
+        g.tract.push( g.space.token(a.val + b.val) )
+    }
 }
-*/
+
+function mul(g) {
+    const a = g.tract.pop()
+    const b = g.tract.pop()
+
+    if (a.type !== g.space.token.NUM || b.type !== g.space.token.NUM) {
+        log('unable to add values ' + a.val + ' and ' + b.val)
+    } else {
+        g.tract.push( g.space.token(a.val * b.val) )
+    }
+}
+
