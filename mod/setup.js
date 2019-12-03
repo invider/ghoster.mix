@@ -69,25 +69,6 @@ module.exports = function setup() {
         name: 'hud',
     })
 
-    const panel = hud.spawn('hud/Container', {
-        Z: 10,
-        name: 'panel',
-
-        drawBackground: function() {
-            fill('#202322')
-            rect(0, 0, this.w, this.h)
-        },
-
-        adjust: function() {
-            this.x = rx(.7)
-            this.y = 0
-            this.w = rx(.3)
-            this.h = rx(1)
-
-            dna.hud.Container.prototype.adjust.apply(this)
-        },
-    })
-
     hud.spawn(dna.hud.GhostView, {
         Z: 1,
         name: 'gspace',
@@ -107,37 +88,71 @@ module.exports = function setup() {
         },
     })
 
-    panel.spawn(dna.hud.TractView, {
-        Z: 2,
-        name: 'inkyTract',
-        ghost: inky,
-        x: rx(.05),
-        y: ry(.5),
+    const panel = hud.spawn('hud/Container', {
+        Z: 10,
+        name: 'panel',
+
+        drawBackground: function() {
+            fill('#202322')
+            rect(0, 0, this.w, this.h)
+        },
+
+        adjust: function() {
+            this.x = rx(.7)
+            this.y = 0
+            this.w = rx(.3)
+            this.h = ry(1)
+
+            this.border = this.w/20
+
+            dna.hud.Container.prototype.adjust.apply(this)
+        },
     })
 
     panel.spawn(dna.hud.DotView, {
         Z: 5,
         name: 'dspace',
         space: space,
-        x: rx(.04),
-        y: ry(.05),
-        w: rx(.25),
-        h: rx(.25),
+
+        adjust: function() {
+            const b = this.__.border
+            this.x = b
+            this.y = b
+            this.w = this.__.w - 2*b
+            this.h = this.w
+        }
     })
 
     panel.spawn('hud/gadget/Button', {
-        text: 'stop',
+        name: 'step',
+        text: 'step',
 
         onClick: function() {
             log('stopping')
         },
 
         adjust: function() {
-            log('adjusting button')
-            this.x = 10
-            this.y = ry(.4)
-            this.w = 100
+            if (!this.__) return
+            this.x = this.__.border
+            this.y = this.__.dspace.y + this.__.dspace.h + this.__.border
+            this.w = this.__.dspace.w/4
             this.h = 100
+        },
+    })
+
+    panel.spawn(dna.hud.TractView, {
+        Z: 2,
+        name: 'inkyTract',
+        ghost: inky,
+        x: rx(.05),
+        y: ry(.5),
+
+        adjust: function() {
+            if (!this.__) return
+            this.x = this.__.border
+            this.y = this.__.step.y + this.__.step.h + this.__.border
+            this.w = this.__.dspace.w/4
+            this.h = 200
         },
     })
 }

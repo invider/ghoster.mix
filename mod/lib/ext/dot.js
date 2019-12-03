@@ -6,6 +6,7 @@ const STR = 3
 const LOC = 4
 const BOOL = 5
 const NAME = 6
+const DOT = 7
 
 let TAB = 4
 
@@ -41,6 +42,15 @@ function hex(c) {
 
 function isAlpha(c) {
     return !isSeparator(c) && !isDigit(c)
+}
+
+function isAlphaNum(c) {
+    return isAlpha(c) || isDigit(c)
+}
+
+function isHex(c) {
+    const code = c.toUpperCase().charCodeAt(0) - 48
+    return (code >= 0 && code < 10) || (code >= 17 && code < 23)
 }
 
 function makeLex(src) {
@@ -121,6 +131,24 @@ function makeLex(src) {
             }
         }
 
+        if (c === '$') {
+
+            let s = '#'
+            c = src.charAt(cur++)
+            while (cur < len && isHex(c)) {
+                s += c
+                c = src.charAt(cur++)
+            }
+            if (!isSeparator(c)) err('unexpected end of color literal')
+            cur--
+
+            return {
+                type: DOT,
+                tab: tab,
+                val: s,
+            }
+        }
+
         let sign = 1
         if (c === '-') {
             sign = -1
@@ -166,7 +194,7 @@ function makeLex(src) {
         }
 
         let sym = ''
-        while ( isAlpha(c) || isDigit(c) ) {
+        while ( isAlphaNum(c) ) {
             sym += c
             c = src.charAt(cur++)
         }
@@ -209,9 +237,15 @@ function parse(src) {
             break;
 
         case NUM: list.push( tok(t.val) ); break;
+
+        case DOT:
+                list.push( tok(t.val, tok.DOT) );
+                break;
+
         case STR: list.push( tok(t.val) ); break;
         }
     }
+
     console.table(list)
     return list
 }
