@@ -38,27 +38,36 @@ GhostView.prototype.draw = function() {
     const M2 = M*2
     const gx = this.gx
     const gy = this.gy
-    const gw = floor(this.w / s)
-    const gh = floor(this.h / s)
+    const gw = floor(this.w / s) + 1
+    const gh = floor(this.h / s) + 1
     this.gw = gw
     this.gh = gh
 
     save()
     translate(this.x, this.y)
 
+    /*
+    // border
     stroke(.1, .5, .5)
     lineWidth(2)
     rect(0, 0, this.w, this.h)
+    */
 
     for (let iy = 0; iy < this.gh; iy++) {
         for (let ix = 0; ix < this.gw; ix++) {
             const token = this.space.get(gx + ix, gy + iy)
 
+            if (!token) {
+                fill(.05, 0, .2, .6)
+                //circle(ix*s + s/2, iy*s + s/2, s*0.03)
+                continue
+            }
+
             // show grid
             stroke(.05, 0, .2, 0.4)
             rect(ix*s, iy*s, s, s)
 
-            if (!token || token.type === dna.dot.token.NIL) {
+            if (token.type === dna.dot.token.NIL) {
                 fill(.05, 0, .2, .6)
                 circle(ix*s + s/2, iy*s + s/2, s*0.03)
                 //rect(ix*s, iy*s, s, s)

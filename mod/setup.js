@@ -27,6 +27,7 @@ const palette = {
     bcyan: '#2aa198',
     bgreen: '#859900',
 }
+
 function generatePalette(d) {
     const tok = lab.space.token
 
@@ -36,6 +37,7 @@ function generatePalette(d) {
 }
 
 module.exports = function setup() {
+
     // ghost space construction
     const space = lab.spawn(dna.dot.Space, {
         name: 'space',
@@ -62,7 +64,31 @@ module.exports = function setup() {
     inky.todo = $.dot.sys
 
     // construct the view
-    lab.spawn(dna.hud.GhostView, {
+    const hud = lab.spawn('hud/Hud', {
+        Z: 2,
+        name: 'hud',
+    })
+
+    const panel = hud.spawn('hud/Container', {
+        Z: 10,
+        name: 'panel',
+
+        drawBackground: function() {
+            fill('#202322')
+            rect(0, 0, this.w, this.h)
+        },
+
+        adjust: function() {
+            this.x = rx(.7)
+            this.y = 0
+            this.w = rx(.3)
+            this.h = rx(1)
+
+            dna.hud.Container.prototype.adjust.apply(this)
+        },
+    })
+
+    hud.spawn(dna.hud.GhostView, {
         Z: 1,
         name: 'gspace',
         space: space,
@@ -72,23 +98,46 @@ module.exports = function setup() {
         h: ry(.7),
 
         period: 0.2,
+
+        adjust: function() {
+            this.x = 0
+            this.y = 0
+            this.w = rx(1)
+            this.h = ry(1)
+        },
     })
 
-    lab.spawn(dna.hud.TractView, {
+    panel.spawn(dna.hud.TractView, {
         Z: 2,
         name: 'inkyTract',
         ghost: inky,
-        x: rx(.7),
+        x: rx(.05),
         y: ry(.5),
     })
 
-    lab.spawn(dna.hud.DotView, {
+    panel.spawn(dna.hud.DotView, {
         Z: 5,
         name: 'dspace',
         space: space,
-        x: rx(.7),
+        x: rx(.04),
         y: ry(.05),
         w: rx(.25),
         h: rx(.25),
+    })
+
+    panel.spawn('hud/gadget/Button', {
+        text: 'stop',
+
+        onClick: function() {
+            log('stopping')
+        },
+
+        adjust: function() {
+            log('adjusting button')
+            this.x = 10
+            this.y = ry(.4)
+            this.w = 100
+            this.h = 100
+        },
     })
 }

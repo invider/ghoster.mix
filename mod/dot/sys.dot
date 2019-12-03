@@ -14,7 +14,7 @@
 v
 
 # solarized
-< base03 .
+ base03 .
 < base02 .
 < base01 .
 < base00 .
@@ -23,7 +23,7 @@ v
 < base2 .
 < base3 .
 v
-> byellow .
+byellow .
 > borange .
 > bred .
 > bmagenta .
@@ -33,7 +33,7 @@ v
 > bgreen .
 
 v
-<<<<<<<<<
+<<<<<
 "b" .
 >> "text value" .
 
