@@ -6,7 +6,8 @@ const STR = 3
 const LOC = 4
 const BOOL = 5
 const NAME = 6
-const DOT = 7
+const LABEL = 7
+const DOT = 8
 
 let TAB = 4
 
@@ -20,6 +21,10 @@ function isNewLine(c) {
 
 function isSeparator(c) {
     return isSpace(c) || isNewLine(c)
+}
+
+function isSpecial(c) {
+    return c === ':' || c === '/' || c === '?' || c === '!'
 }
 
 function isDigit(c) {
@@ -41,11 +46,11 @@ function hex(c) {
 }
 
 function isAlpha(c) {
-    return !isSeparator(c) && !isDigit(c)
+    return !isSeparator(c) && !isDigit(c) && !isSpecial(c)
 }
 
 function isAlphaNum(c) {
-    return isAlpha(c) || isDigit(c)
+    return !isSeparator(c) && !isSpecial(c)
 }
 
 function isHex(c) {
@@ -73,7 +78,7 @@ function makeLex(src) {
         bos = true
     }
 
-    const next = function() {
+    const lookAhead = function() {
         if (cur >= len) return false
 
         let c = src.charAt(cur++)
@@ -103,7 +108,7 @@ function makeLex(src) {
         // got to an actual token
         mark = cur
 
-        // operators
+        // action shortcuts and operators
         switch (c) {
             case '^': return { type: SYM, tab: tab, val: 'up' };
             case '<': return { type: SYM, tab: tab, val: 'left' };
@@ -138,6 +143,14 @@ function makeLex(src) {
             while (cur < len && isHex(c)) {
                 s += c
                 c = src.charAt(cur++)
+            }
+            if (c === ':') {
+                // parse the color name
+                c = src.charAt(cur++)
+                while (cur < len && !isSeparator(c)) {
+                    s += c
+                    c = src.charAt(cur++)
+                }
             }
             if (!isSeparator(c)) err('unexpected end of color literal')
             cur--
@@ -198,56 +211,110 @@ function makeLex(src) {
             sym += c
             c = src.charAt(cur++)
         }
-        cur--
-        return {
-            type: SYM,
-            tab: tab,
-            val: sym,
+
+        if (c === ':') {
+            return {
+                type: LABEL,
+                tab: tab,
+                val: sym,
+            }
+
+        } else {
+            cur--
+            return {
+                type: SYM,
+                tab: tab,
+                val: sym,
+            }
         }
     }
 
+    let lastToken
+    let isBuffered = false
+    const next = function() {
+        if (isBuffered) {
+            isBuffered = false
+            return lastToken
+        } else {
+            lastToken = lookAhead()
+            return lastToken
+        }
+    }
+
+    const ahead = function() {
+        if (isBuffered) {
+            return lastToken
+        } else {
+            lastToken = lookAhead()
+            isBuffered = true
+            return lastToken
+        }
+    }
+
+    const ret = function() {
+        if (isBuffered) throw 'token buffer overflow'
+        isBuffered = true
+    }
+
     return {
-        next: next
+        next: next,
+        ahead: ahead,
+        ret: ret,
     }
 }
 
 function parse(src) {
-    const lex = makeLex(src)
-    const list = []
-
-    let t
     const tok = dna.dot.token
+    const lex = makeLex(src)
 
-    while(t = lex.next()) {
+    function doStep(name) {
+
+        const t = lex.next()
+        if (!t) return
+
         log('#' + t.type + ' @' + t.tab + ' [' + t.val + ']')
 
         switch (t.type) {
+
+        case LABEL: return doStep(t.val)
+
         case SYM:
             if (t.val === 'true'
                     || t.val === 'yes'
                     || t.val === 'ok') {
-                list.push( tok(true) );
+                return tok(true, undefined, name)
             } else if (t.val === 'false'
                     || t.val === 'no'
                     || t.val === 'cancel') {
-                list.push( tok(false) );
+                return tok(false, undefined, name)
             } else {
-                list.push( tok(t.val) );
+                return tok(t.val, undefined, name)
             }
-            break;
 
-        case NUM: list.push( tok(t.val) ); break;
+        case NUM: return tok(t.val, undefined, name)
 
-        case DOT:
-                list.push( tok(t.val, tok.DOT) );
-                break;
+        case DOT: return tok(t.val, tok.DOT, name)
 
-        case STR: list.push( tok(t.val) ); break;
+        case STR: return tok(t.val, undefined, name)
         }
+
+        throw "syntax error: unrecognized lexem #" + t.type + ': ' + t.val
     }
 
-    console.table(list)
-    return list
+    function doBlock() {
+        const list = []
+
+        let token
+        while(token = doStep()) {
+            list.push(token)
+        }
+
+        return list
+    }
+
+    const sq = doBlock()
+    console.table(sq)
+    return sq
 }
 
 function dot(src) {

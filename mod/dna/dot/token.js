@@ -31,13 +31,13 @@ function hex(str) {
     return d
 }
 
-function token(val, type, meta) {
+function token(val, type, name) {
     // TODO lookup in the buffer first
-
     if (val instanceof Token) return val // value already tokenized
 
     const t = new Token()
-    t.val = val
+    if (val) t.val = val
+    if (name) t.name = name
 
     if (val === undefined || val === null) {
         t.type = NIL
