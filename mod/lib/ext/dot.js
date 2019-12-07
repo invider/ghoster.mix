@@ -58,55 +58,78 @@ function isHex(c) {
     return (code >= 0 && code < 10) || (code >= 17 && code < 23)
 }
 
-function makeLex(src) {
-    const len = src.length
+function makeStream(src) {
     let cur = 0
+    let buf = false
+    let cbuf
+
+    return {
+        cur: function() {
+            if (buf) return cur-1
+            else return cur
+        },
+        getc: function() {
+            if (buf) buf = false
+            else cbuf = src.charAt(cur++)
+            return cbuf
+        },
+        retc: function () {
+            if (buf) throw "stream buffer overflow"
+            buf = true
+        },
+    }
+}
+
+function makeLex(getc, retc, cur) {
     let mark = 0
     let lineNum = 1
     let lineShift = 0
     let tab = 0
     let bos = true // beginning of a string
 
-    const err = function(msg) {
+    function err (msg) {
         throw 'lexical error @' + lineNum + ':' + (mark-lineShift) + ' - ' + msg
     }
 
-    const line = function() {
+    function markLine () {
         lineNum ++
-        lineShift = cur
+        lineShift = cur()
         tab = 0
         bos = true
     }
 
-    const lookAhead = function() {
-        if (cur >= len) return false
 
-        let c = src.charAt(cur++)
+    function parseNext() {
+
+        let c = getc()
+        if (!c) return false
 
         while (isSpace(c)) {
-            c = src.charAt(cur++)
+            c = getc()
             if (bos) {
-                if (c === '\t') tab += TAB - ((cur-lineShift)%TAB)
+                if (c === '\t') tab += TAB - ((cur()-lineShift)%TAB)
                 else tab ++
             }
         }
         bos = false
 
         if (isNewLine(c)) {
-            let n = src.charAt(cur)
-            if (c === '\r' && n === '\n') cur ++ // eat line feed in CR LF
-            line()
-            return next()
+            const n = getc()
+            if (c === '\n' && n !== '\r') {
+                retc()
+            }
+            markLine()
+            return parseNext()
         }
 
         if (c === '#') {
-            while (cur < len && !isNewLine(c)) c = src.charAt(cur++)
-            line()
-            return next()
+            while (c && !isNewLine(c)) c = getc()
+            markLine()
+            return parseNext()
         }
 
         // got to an actual token
-        mark = cur
+        mark = cur()
 
         // action shortcuts and operators
         switch (c) {
@@ -121,10 +144,10 @@ function makeLex(src) {
 
         if (c === '"') {
             let s = ''
-            c = src.charAt(cur++)
-            while (cur < len && c !== '"' && !isNewLine(c)) {
+            c = getc()
+            while (c && c !== '"' && !isNewLine(c)) {
                 s += c
-                c = src.charAt(cur++)
+                c = getc()
             }
 
             if (c != '"') err('unexpected end of string')
@@ -139,21 +162,13 @@ function makeLex(src) {
         if (c === '$') {
 
             let s = '#'
-            c = src.charAt(cur++)
-            while (cur < len && isHex(c)) {
+            c = getc()
+            while (c && isHex(c)) {
                 s += c
-                c = src.charAt(cur++)
-            }
-            if (c === ':') {
-                // parse the color name
-                c = src.charAt(cur++)
-                while (cur < len && !isSeparator(c)) {
-                    s += c
-                    c = src.charAt(cur++)
-                }
+                c = getc()
             }
             if (!isSeparator(c)) err('unexpected end of color literal')
-            cur--
+            retc()
 
             return {
                 type: DOT,
@@ -165,36 +180,49 @@ function makeLex(src) {
         let sign = 1
         if (c === '-') {
             sign = -1
-            c = src.charAt(cur++)
+            c = getc()
         }
 
         if (isDigit(c)) {
             let n = 0
-            if (c === '0' && src.charAt(cur) === 'x') {
+            if (c === '0' && getc() === 'x') {
                 if (sign < 0) err("hex value can't be negative")
-                cur ++
-                let d = hex(src.charAt(cur++))
+
+                let d = hex(getc())
                 if (d < 0) {
                     err('wrong number format')
                 }
                 while (d >= 0) {
                     n = n*16 + d
-                    d = hex(src.charAt(cur++))
+                    d = hex(getc())
                 }
-                cur--
+                retc()
+
                 return {
                     type: NUM,
                     tab: tab,
                     val: n
+                }
+            } else if (c === '0') {
+                retc()
+                c = getc()
+                if (!isSeparator(c)) err('wrong number format')
+
+                retc()
+                return {
+                    type: NUM,
+                    tab: tab,
+                    val: 0,
                 }
 
             } else {
                 let d = 0
                 while ((d = dec(c)) >= 0) {
                     n = n*10 + d
-                    c = src.charAt(cur++)
+                    c = getc()
                 }
-                cur--
+                retc()
+
                 return {
                     type: NUM,
                     tab: tab,
@@ -209,7 +237,7 @@ function makeLex(src) {
         let sym = ''
         while ( isAlphaNum(c) ) {
             sym += c
-            c = src.charAt(cur++)
+            c = getc() 
         }
 
         if (c === ':') {
@@ -220,7 +248,7 @@ function makeLex(src) {
             }
 
         } else {
-            cur--
+            retc()
             return {
                 type: SYM,
                 tab: tab,
@@ -231,27 +259,21 @@ function makeLex(src) {
 
     let lastToken
     let isBuffered = false
-    const next = function() {
-        if (isBuffered) {
-            isBuffered = false
-            return lastToken
-        } else {
-            lastToken = lookAhead()
-            return lastToken
-        }
+    function next() {
+        if (isBuffered) isBuffered = false
+        else lastToken = parseNext()
+        return lastToken
     }
 
-    const ahead = function() {
-        if (isBuffered) {
-            return lastToken
-        } else {
-            lastToken = lookAhead()
+    function ahead() {
+        if (!isBuffered) {
+            lastToken = parseNext()
             isBuffered = true
-            return lastToken
         }
+        return lastToken
     }
 
-    const ret = function() {
+    function ret() {
         if (isBuffered) throw 'token buffer overflow'
         isBuffered = true
     }
@@ -265,10 +287,10 @@ function makeLex(src) {
 
 function parse(src) {
     const tok = dna.dot.token
-    const lex = makeLex(src)
+    const stream = makeStream(src)
+    const lex = makeLex(stream.getc, stream.retc, stream.cur)
 
     function doStep(name) {
-
         const t = lex.next()
         if (!t) return
 

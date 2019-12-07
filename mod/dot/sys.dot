@@ -4,11 +4,10 @@
 
 white: $ffffff . >
 
+
+
   red .
-> green .
-> blue .
-> cyan .
-> yellow .
+> green .  > blue .  > cyan .  > yellow .
 > magenta .
 > black .
 > white .
