@@ -26,6 +26,31 @@ function Ghost(st) {
     this.space = st.space
 }
 
+Ghost.prototype.evo = function(t) {
+    if (t.type === this.space.token.SYM) {
+        // try to bind
+        const f = this.dict[t.val]
+        if (isFun(f)) {
+            f(this)
+        } else if (f) {
+            this.tract.push(f)
+        } else {
+            log('unable to find [' + t.val + ']')
+            console.dir(this.dict)
+        }
+
+    } else if (t.type === this.space.token.LIST) {
+        const g = this
+        t.val.forEach(t => {
+            g.evo(t)
+        })
+
+    } else {
+        log('pushing #' + t.type + ' [' + t.val + ']')
+        this.tract.push(t)
+    }
+}
+
 Ghost.prototype.step = function() {
     if (this.todo.length > 0) {
         //console.table(this.tract)
@@ -33,21 +58,7 @@ Ghost.prototype.step = function() {
         const t = this.todo[0]
         this.todo.splice(0, 1)
 
-        if (t.type === this.space.token.SYM) {
-            // try to bind
-            const f = this.dict[t.val]
-            if (isFun(f)) {
-                f(this)
-            } else if (f) {
-                this.tract.push(f)
-            } else {
-                log('unable to find [' + t.val + ']')
-                console.dir(this.dict)
-            }
-        } else {
-            log('pushing #' + t.type + ' [' + t.val + ']')
-            this.tract.push(t)
-        }
+        this.evo(t)
     }
 }
 

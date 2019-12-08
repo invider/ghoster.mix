@@ -61,7 +61,7 @@ module.exports = function setup() {
         if (k === '_' || k === '__') return
         inky.dict[k] = lib.dict[k]
     })
-    inky.todo = $.dot.sys
+    inky.todo = $.dot.sys.val
 
     // construct the view
     const hud = lab.spawn('hud/Hud', {

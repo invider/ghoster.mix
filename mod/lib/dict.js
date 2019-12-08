@@ -58,3 +58,6 @@ function mul(g) {
     }
 }
 
+function evo(g) {
+    const target = g.tract.pop()
+}

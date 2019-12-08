@@ -59,33 +59,56 @@ function isHex(c) {
 }
 
 function makeStream(src) {
-    let cur = 0
+    let pos = 0
     let buf = false
-    let cbuf
+    let bufc
+
+    function cur() {
+        if (buf) return pos-1
+        else return pos
+    }
+
+    function getc() {
+        if (buf) buf = false
+        else bufc = src.charAt(pos++)
+        return bufc
+    }
+
+    function retc() {
+        if (buf) throw "stream buffer overflow"
+        buf = true
+    }
+
+    function aheadc() {
+        const c = getc()
+        retc()
+        return c
+    }
+
+    function expectc(c) {
+        if (getc() !== c) throw `${c} is expected`
+    }
+
+    function notc(c) {
+        if (getc() === c) throw `${c} is not expected`
+    }
 
     return {
-        cur: function() {
-            if (buf) return cur-1
-            else return cur
-        },
-        getc: function() {
-            if (buf) buf = false
-            else cbuf = src.charAt(cur++)
-            return cbuf
-        },
-        retc: function () {
-            if (buf) throw "stream buffer overflow"
-            buf = true
-        },
+        cur: cur,
+        getc: getc,
+        retc: retc,
+        aheadc: aheadc,
+        expectc: expectc,
+        notc: notc,
     }
 }
 
-function makeLex(getc, retc, cur) {
+function makeLex(getc, retc, aheadc, expectc, notc, cur) {
     let mark = 0
     let lineNum = 1
     let lineShift = 0
     let tab = 0
-    let bos = true // beginning of a string
+    let lead = true // beginning of a string
 
     function err (msg) {
         throw 'lexical error @' + lineNum + ':' + (mark-lineShift) + ' - ' + msg
@@ -95,9 +118,40 @@ function makeLex(getc, retc, cur) {
         lineNum ++
         lineShift = cur()
         tab = 0
-        bos = true
+        lead = true
     }
 
+    function skipLine() {
+        let c = getc()
+        while (c && !isNewLine(c)) c = getc()
+        if (isNewLine(c)) markLine()
+    }
+
+    function afterLineComment() {
+        skipLine()
+        log('skipping')
+        return parseNext()
+    }
+
+    function afterMultiComment(cc) {
+        skipLine()
+
+        let c = getc()
+        while (isSpace(c)) c = getc()
+
+        if (c === cc) {
+            if (getc() === cc) {
+                if (getc() === cc) {
+                    if (getc() === cc) {
+                        // end of multiline
+                        skipLine()
+                        return parseNext()
+                    }
+                }
+            }
+        }
+        return afterMultiComment(cc)
+    }
 
     function parseNext() {
 
@@ -106,12 +160,12 @@ function makeLex(getc, retc, cur) {
 
         while (isSpace(c)) {
             c = getc()
-            if (bos) {
+            if (lead) {
                 if (c === '\t') tab += TAB - ((cur()-lineShift)%TAB)
                 else tab ++
             }
         }
-        bos = false
+        lead = false
 
         if (isNewLine(c)) {
             const n = getc()
@@ -122,10 +176,23 @@ function makeLex(getc, retc, cur) {
             return parseNext()
         }
 
-        if (c === '#') {
-            while (c && !isNewLine(c)) c = getc()
-            markLine()
-            return parseNext()
+        if (c === '#') return afterLineComment()
+
+        // skip -- and multiline ---- comments
+        if (c === '-' || c === '=') {
+            const cc = c
+            if (aheadc() === cc) {
+                getc()
+
+                if (aheadc() === cc) {
+                    expectc(cc)
+                    expectc(cc)
+                    return afterMultiComment(cc)
+
+                } else {
+                    return afterLineComment()
+                }
+            }
         }
 
         // got to an actual token
@@ -288,54 +355,68 @@ function makeLex(getc, retc, cur) {
 function parse(src) {
     const tok = dna.dot.token
     const stream = makeStream(src)
-    const lex = makeLex(stream.getc, stream.retc, stream.cur)
+    const lex = makeLex(
+                    stream.getc,
+                    stream.retc,
+                    stream.aheadc,
+                    stream.expectc,
+                    stream.notc,
+                    stream.cur)
 
-    function doStep(name) {
+    function doCommand(tab, label) {
         const t = lex.next()
         if (!t) return
 
         log('#' + t.type + ' @' + t.tab + ' [' + t.val + ']')
 
+        if (t.tab < tab) return // no more commands in this block
+
+        if (t.tab > tab) {
+            // looks like a new block
+            lex.ret() // this one is from within the new block
+            return doBlock(t.tab, label)
+        }
+
         switch (t.type) {
 
-        case LABEL: return doStep(t.val)
+        case LABEL: return doCommand(tab, t.val)
 
         case SYM:
             if (t.val === 'true'
                     || t.val === 'yes'
                     || t.val === 'ok') {
-                return tok(true, undefined, name)
+                return tok(true, undefined, label)
             } else if (t.val === 'false'
                     || t.val === 'no'
                     || t.val === 'cancel') {
-                return tok(false, undefined, name)
+                return tok(false, undefined, label)
             } else {
-                return tok(t.val, undefined, name)
+                return tok(t.val, undefined, label)
             }
 
-        case NUM: return tok(t.val, undefined, name)
+        case NUM: return tok(t.val, undefined, label)
 
-        case DOT: return tok(t.val, tok.DOT, name)
+        case DOT: return tok(t.val, tok.DOT, label)
 
-        case STR: return tok(t.val, undefined, name)
+        case STR: return tok(t.val, undefined, label)
         }
 
         throw "syntax error: unrecognized lexem #" + t.type + ': ' + t.val
     }
 
-    function doBlock() {
+    function doBlock(tab) {
         const list = []
 
         let token
-        while(token = doStep()) {
+        while(token = doCommand(tab)) {
             list.push(token)
         }
 
-        return list
+        return tok(list)
     }
 
-    const sq = doBlock()
-    console.table(sq)
+    const sq = doBlock(0)
+    //console.table(sq)
     return sq
 }
 

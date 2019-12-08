@@ -1,37 +1,46 @@
-# some comment
-
+====
+define inky ghost
+first thing in the morning
+====
 @inky
 
-white: $ffffff . >
+----
+and now some comments
+----
 
+-- really
+-- white: $ffffff . >
 
+draw:
+    red .
+    > green .
+    > blue .
+    > cyan .
+    > yellow .
+    > magenta .
+    > black .
+    > white .
+    > gray .
+    v
 
-  red .
-> green .  > blue .  > cyan .  > yellow .
-> magenta .
-> black .
-> white .
-> gray .
-v
-
-# solarized
- base03 .
-< base02 .
-< base01 .
-< base00 .
-< base0 .
-< base1 .
-< base2 .
-< base3 .
-v
-byellow .
-> borange .
-> bred .
-> bmagenta .
-> bviolet .
-> bblue .
-> bcyan .
-> bgreen .
+    -- solarized
+     base03 .
+    < base02 .
+    < base01 .
+    < base00 .
+    < base0 .
+    < base1 .
+    < base2 .
+    < base3 .
+    v
+    byellow .
+    > borange .
+    > bred .
+    > bmagenta .
+    > bviolet .
+    > bblue .
+    > bcyan .
+    > bgreen .
 
 v
 <<<<<
