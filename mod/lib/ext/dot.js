@@ -129,7 +129,6 @@ function makeLex(getc, retc, aheadc, expectc, notc, cur) {
 
     function afterLineComment() {
         skipLine()
-        log('skipping')
         return parseNext()
     }
 
@@ -367,9 +366,13 @@ function parse(src) {
         const t = lex.next()
         if (!t) return
 
-        log('#' + t.type + ' @' + t.tab + ' [' + t.val + ']')
+        //log('#' + t.type + ' @' + t.tab + ' [' + t.val + ']')
 
-        if (t.tab < tab) return // no more commands in this block
+        if (t.tab < tab) {
+            // no more commands in this block
+            lex.ret()
+            return
+        }
 
         if (t.tab > tab) {
             // looks like a new block
@@ -416,7 +419,6 @@ function parse(src) {
     }
 
     const sq = doBlock(0)
-    //console.table(sq)
     return sq
 }
 

@@ -54,14 +54,20 @@ module.exports = function setup() {
     })
     space.ghost.push(inky)
 
+    // fix dictionary
     generatePalette(lib.dict)
+    
+    // rename ido -> do
+    lib.dict['do'] = lib.dict.ido
+    lib.dict.ido = undefined
+
 
     // teach inky everything
     Object.keys(lib.dict).forEach(k => {
         if (k === '_' || k === '__') return
         inky.dict[k] = lib.dict[k]
     })
-    inky.todo = $.dot.sys.val
+    inky.schedule($.dot.sys)
 
     // construct the view
     const hud = lab.spawn('hud/Hud', {

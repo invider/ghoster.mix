@@ -25,7 +25,7 @@ function GhostView(st) {
 GhostView.prototype.evo = function(dt) {
     this.dt += dt
     if (this.dt >= this.period) {
-        this.space.step()
+        this.space.next()
         this.dt -= this.period
     }
 }
@@ -71,6 +71,14 @@ GhostView.prototype.draw = function() {
                 fill(.05, 0, .2, .6)
                 circle(ix*s + s/2, iy*s + s/2, s*0.03)
                 //rect(ix*s, iy*s, s, s)
+                
+            } else if (token.type === dna.dot.token.NUM ) {
+                font(this.font2)
+                baseMiddle()
+                alignCenter()
+                fill(.05, .7, .4)
+                text('' + token.val, ix*s+hs, iy*s+hs)
+
 
             } else if (token.type === dna.dot.token.CHAR ) {
                 font(this.font)

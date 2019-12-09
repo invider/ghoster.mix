@@ -24,7 +24,7 @@ draw:
     v
 
     -- solarized
-     base03 .
+    base03 .
     < base02 .
     < base01 .
     < base00 .
@@ -42,12 +42,14 @@ draw:
     > bcyan .
     > bgreen .
 
+gigi do dodo
+
 v
 <<<<<
 "b" .
 >> "text value" .
 
 10 20 30 add add
-2 mul
+2 mul > .
 
 # eof

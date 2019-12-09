@@ -80,6 +80,32 @@ function token(val, type, name) {
     return t
 }
 
+token.dump = function(t) {
+    if (!t) return 'undefined'
+    let d = t.name? t.name + ': ' : ''
+
+    let v = ''
+    switch(t.type) {
+        case NIL: v = 'nil'; break;
+        case DOT: v = t.val; break;
+        case SYM: v = t.val; break;
+        case BOOL: v = t.val? 'true' : 'false'; break;
+        case NUM: v = '' + t.val; break;
+        case CHAR: v = `'${t.val}'`; break;
+        case STR: v = `'${t.val}'`; break;
+        case LIST:
+            v = '[\n'
+            t.val.forEach(e => {
+                v += '    ' + token.dump(e) + '\n'
+            })
+            v += ']\n'
+            break;
+
+        default: v = 'unknown'; break;
+    }
+    return d + v
+}
+
 token.NIL = NIL
 token.DOT = DOT
 token.SYM = SYM
