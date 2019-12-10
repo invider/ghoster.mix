@@ -45,6 +45,7 @@ GhostView.prototype.draw = function() {
 
     save()
     translate(this.x, this.y)
+    blocky()
 
     /*
     // border
@@ -113,9 +114,18 @@ GhostView.prototype.draw = function() {
         let vx = g.x - gx
         let vy = g.y - gy
         if (vx >= 0 && vx < gw && vy >= 0 && vy < gh) {
-            lineWidth(2)
-            stroke(.02, .5, .5)
-            circle(vx*s+hs, vy*s+hs, hs-4) 
+            //lineWidth(2)
+            //stroke(.02, .5, .5)
+            //circle(vx*s+hs, vy*s+hs, hs-4) 
+            let img
+            switch(g.lastMove) {
+            case 1: img = res.ghost[1]; break;
+            case 2: img = res.ghost[4]; break;
+            case 3: img = res.ghost[3]; break;
+            default: img = res.ghost[2]; break;
+            }
+
+            image(img, vx*s, vy*s, s, s)
         }
     })
 

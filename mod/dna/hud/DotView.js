@@ -3,11 +3,13 @@ function DotView(st) {
     this.y = 0
     this.w = 200
     this.h = 200
+    this.gx = 0
+    this.gy = 0
 
     augment(this, st)
+    if (!this.gw) this.gw = this.space.width
+    if (!this.gh) this.gh = this.space.height
 
-    this.gw = this.space.width
-    this.gh = this.space.height
     this.bufCanvas = document.createElement('canvas')
     this.bufCanvas.width = this.gw
     this.bufCanvas.height = this.gh
@@ -38,7 +40,7 @@ DotView.prototype.draw = function() {
 
     for (let gy = 0; gy < this.gh; gy++) {
         for (let gx = 0; gx < this.gw; gx++) {
-            const t = this.space.get(gx, gy)
+            const t = this.space.get(this.gx + gx, this.gy + gy)
 
             let sh = (gy*this.gw + gx) * 4
             if (!t || t.type === this.space.token.NIL) {

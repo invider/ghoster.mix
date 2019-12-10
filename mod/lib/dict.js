@@ -1,22 +1,38 @@
 
 function up(g) {
-    if (g.y > 0) g.y--
-    else log('unable to move up')
+    if (g.y > 0) {
+        g.y--
+        g.lastMove = 1
+    } else {
+        log('unable to move up')
+    }
 }
 
 function down(g) {
-    if (g.y < g.space.height-1) g.y++
-    else log('unable to move down')
+    if (g.y < g.space.height-1) {
+        g.y++
+        g.lastMove = 3
+    } else {
+        log('unable to move down')
+    }
 }
 
 function left(g) {
-    if (g.x > 0) g.x--
-    else log('unable to move left')
+    if (g.x > 0) {
+        g.x--
+        g.lastMove = 2
+    } else {
+        log('unable to move left')
+    }
 }
 
 function right(g) {
-    if (g.x < g.space.width-1) g.x++
-    else log('unable to move right')
+    if (g.x < g.space.width-1) {
+        g.x++
+        g.lastMove = 4
+    } else {
+        log('unable to move right')
+    }
 }
 
 function dot(g) {
