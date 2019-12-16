@@ -63,6 +63,17 @@ function add(g) {
     }
 }
 
+function sub(g) {
+    const a = g.tract.pop()
+    const b = g.tract.pop()
+
+    if (a.type !== g.space.token.NUM || b.type !== g.space.token.NUM) {
+        log('unable to sub values ' + a.val + ' and ' + b.val)
+    } else {
+        g.tract.push( g.space.token(a.val - b.val) )
+    }
+}
+
 function mul(g) {
     const a = g.tract.pop()
     const b = g.tract.pop()
@@ -74,7 +85,40 @@ function mul(g) {
     }
 }
 
-function ido(g) {
+function div(g) {
+    const a = g.tract.pop()
+    const b = g.tract.pop()
+
+    if (a.type !== g.space.token.NUM || b.type !== g.space.token.NUM) {
+        log('unable to divide values ' + a.val + ' and ' + b.val)
+    } else {
+        g.tract.push( g.space.token(round(a.val / b.val)) )
+    }
+}
+
+function mod(g) {
+    const a = g.tract.pop()
+    const b = g.tract.pop()
+
+    if (a.type !== g.space.token.NUM || b.type !== g.space.token.NUM) {
+        log('unable to get reminder for values ' + a.val + ' and ' + b.val)
+    } else {
+        g.tract.push( g.space.token(round(a.val % b.val)) )
+    }
+}
+
+function __pow__(g) {
+    const a = g.tract.pop()
+    const b = g.tract.pop()
+
+    if (a.type !== g.space.token.NUM || b.type !== g.space.token.NUM) {
+        log('unable to exponentiate ' + a.val + ' to ' + b.val)
+    } else {
+        g.tract.push( g.space.token(pow(a.val, b.val)) )
+    }
+}
+
+function __do__(g) {
     const target = g.tract.pop()
     g.evalSequence(target)
 }

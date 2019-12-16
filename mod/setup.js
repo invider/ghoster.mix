@@ -57,9 +57,16 @@ module.exports = function setup() {
     // fix dictionary
     generatePalette(lib.dict)
     
-    // rename ido -> do
-    lib.dict['do'] = lib.dict.ido
-    lib.dict.ido = undefined
+    // rename escaped functions like do and pow
+    Object.keys(lib.dict)
+        .filter(k => k.startsWith('__') && k.endsWith('__') && k.length > 4)
+        .forEach(k => {
+            const nk = k.substring(2, k.length - 2)
+
+            log('renaming ' + k + ' -> ' + nk)
+            lib.dict[nk] = lib.dict[k]
+            lib.dict[k] = undefined
+        })
 
 
     // teach inky everything
