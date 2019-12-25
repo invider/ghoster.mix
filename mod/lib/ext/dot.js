@@ -89,6 +89,13 @@ function makeStream(src) {
         if (getc() !== c) throw `${c} is expected`
     }
 
+    function eatc(c) {
+        let i = 0
+        while(getc() === c) i++
+        retc()
+        return i
+    }
+
     function notc(c) {
         if (getc() === c) throw `${c} is not expected`
     }
@@ -97,13 +104,14 @@ function makeStream(src) {
         cur: cur,
         getc: getc,
         retc: retc,
+        eatc: eatc,
         aheadc: aheadc,
         expectc: expectc,
         notc: notc,
     }
 }
 
-function makeLex(getc, retc, aheadc, expectc, notc, cur) {
+function makeLex(getc, retc, eatc, aheadc, expectc, notc, cur) {
     let mark = 0
     let lineNum = 1
     let lineShift = 0
@@ -132,24 +140,18 @@ function makeLex(getc, retc, aheadc, expectc, notc, cur) {
         return parseNext()
     }
 
-    function afterMultiComment(cc) {
+    function afterMultiComment(cc, len) {
         skipLine()
 
-        let c = getc()
-        while (isSpace(c)) c = getc()
+        while (isSpace(aheadc())) getc()
 
-        if (c === cc) {
-            if (getc() === cc) {
-                if (getc() === cc) {
-                    if (getc() === cc) {
-                        // end of multiline
-                        skipLine()
-                        return parseNext()
-                    }
-                }
-            }
+        const i = eatc(cc)
+        if (i === len) {
+            // end of multiline
+            skipLine()
+            return parseNext()
         }
-        return afterMultiComment(cc)
+        return afterMultiComment(cc, len)
     }
 
     function parseNext() {
@@ -184,9 +186,8 @@ function makeLex(getc, retc, aheadc, expectc, notc, cur) {
                 getc()
 
                 if (aheadc() === cc) {
-                    expectc(cc)
-                    expectc(cc)
-                    return afterMultiComment(cc)
+                    let len = eatc(cc) + 2
+                    return afterMultiComment(cc, len)
 
                 } else {
                     return afterLineComment()
@@ -357,6 +358,7 @@ function parse(src) {
     const lex = makeLex(
                     stream.getc,
                     stream.retc,
+                    stream.eatc,
                     stream.aheadc,
                     stream.expectc,
                     stream.notc,

@@ -50,6 +50,7 @@ module.exports = function setup() {
     const inky = new dna.dot.Ghost({
         x: 0,
         y: 0,
+        player: 1,
         space: space,
     })
     space.ghost.push(inky)

@@ -1,5 +1,6 @@
 ====
 define inky ghost
+=========
 first thing in the morning
 ====
 @inky
@@ -9,7 +10,7 @@ and now some comments
 ----
 
 -- really
--- white: $ffffff . >
+white: $ffffff . >
 
 draw:
     red .
