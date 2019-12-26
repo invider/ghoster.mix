@@ -25,7 +25,6 @@ GhostView.prototype.follow = function(ghost) {
 
     const view = this
     ghost.onMove = function() {
-        console.dir(view.target)
         if (view.target !== this) return
         view.adjustViewport()
     }
@@ -38,11 +37,11 @@ GhostView.prototype.centerAt = function(gx, gy) {
     this.gx = limit(tx, 0, this.space.w - this.gw + 1)
     this.gy = limit(ty, 0, this.space.h - this.gh + 1)
 
-    log(`looking at ${this.gx}x${this.gy}`)
+    log(`looking at ${gx}x${gy}`)
+    log(`top left is ${this.gx}x${this.gy}`)
 }
 
 GhostView.prototype.adjustViewport = function() {
-    log('!!!!!!!!!!!!!!!!!   adjusting view !!!!!!!!!!!!!!!!!!!!!!!!')
     if (this.gx > this.target.x) this.gx = this.target.x
     if (this.gy > this.target.y) this.gy = this.target.y
     if (this.gx + this.gw - 4 < this.target.x) this.gx = max(this.target.x - this.gw + 2, 0)
@@ -91,10 +90,13 @@ GhostView.prototype.draw = function() {
                 continue
             }
 
-            // show grid
-            stroke(.05, 0, .2, 0.4)
-            rect(ix*s, iy*s, s, s)
+            if (token.type === dna.dot.token.OUT) {
+                continue
+            }
 
+            // show grid
+            //stroke(.05, 0, .2, 0.4)
+            //rect(ix*s, iy*s, s, s)
 
             if (token.type === dna.dot.token.NIL) {
                 fill(.05, 0, .2, .6)
@@ -133,7 +135,6 @@ GhostView.prototype.draw = function() {
                 alignCenter()
                 fill(.05, .7, .4)
                 text('?', ix*s+hs, iy*s+hs)
-
             }
         }
     }

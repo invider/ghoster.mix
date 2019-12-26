@@ -1,5 +1,6 @@
 'use strict'
 
+const OUT = -1
 const NIL = 0
 const DOT = 1
 const SYM = 2
@@ -12,7 +13,13 @@ const ROUT = 8
 const LIST = 11
 const UNKNOWN = 99
 
-function Token() {}
+const TOKEN_OUT = new Token(OUT, '--out--')
+const TOKEN_NIL = new Token(NIL)
+
+function Token(t, v) {
+    this.type = t
+    this.val = v
+}
 
 function ihex(c) {
     const code = c.toUpperCase().charCodeAt(0) - 48
@@ -35,13 +42,18 @@ function token(val, type, name) {
     // TODO lookup in the buffer first
     if (val instanceof Token) return val // value already tokenized
 
+    if (!name && (val === undefined || val === null)) {
+        return TOKEN_NIL
+    }
+
     const t = new Token()
     if (val) t.val = val
     if (name) t.name = name
 
     if (val === undefined || val === null) {
+        // looks like named nil!
         t.type = NIL
-        t.val = null
+
     } else if (typeof val === 'boolean') {
         t.type = BOOL
     } else if (typeof val === 'number') {
@@ -106,6 +118,7 @@ token.dump = function(t) {
     return d + v
 }
 
+token.OUT = OUT
 token.NIL = NIL
 token.DOT = DOT
 token.SYM = SYM
@@ -118,3 +131,5 @@ token.ROUT = ROUT
 token.LIST = LIST
 token.UNKNOWN = UNKNOWN
 
+token.TOKEN_OUT = TOKEN_OUT
+token.TOKEN_NIL = TOKEN_NIL

@@ -8,14 +8,19 @@ function DotView(st) {
     this.showPort = true
 
     augment(this, st)
-    if (!this.gw) this.gw = this.space.w
-    if (!this.gh) this.gh = this.space.h
 
-    this.bufCanvas = document.createElement('canvas')
-    this.bufCanvas.width = this.gw
-    this.bufCanvas.height = this.gh
-    this.bufContext = this.bufCanvas.getContext('2d')
+    const view = this
+    this.space.onReplot = chain(this.space.onReplot, function() {
+        view.gx = 0
+        view.gy = 0
+        view.gw = this.w
+        view.gh = this.h
+        view.createBuffer()
+    })
 
+    this.createBuffer()
+
+    /*
     this.bufContext.fillStyle = '#209050'
     this.bufContext.fillRect(0, 0, 10, 10)
 
@@ -24,6 +29,17 @@ function DotView(st) {
     this.bufContext.moveTo(0, 0)
     this.bufContext.lineTo(48, 48)
     this.bufContext.stroke()
+    */
+}
+
+DotView.prototype.createBuffer = function() {
+    if (!this.gw) this.gw = this.space.w
+    if (!this.gh) this.gh = this.space.h
+
+    this.bufCanvas = document.createElement('canvas')
+    this.bufCanvas.width = this.gw
+    this.bufCanvas.height = this.gh
+    this.bufContext = this.bufCanvas.getContext('2d')
 }
 
 DotView.prototype.ghostX = function(x) {

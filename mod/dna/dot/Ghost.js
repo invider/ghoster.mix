@@ -29,6 +29,26 @@ function Ghost(st) {
     this.space = st.space
 }
 
+Ghost.prototype.peek = function() {
+    return this.tract.peekBack()
+}
+
+Ghost.prototype.pop = function() {
+    return this.tract.pop()
+}
+
+Ghost.prototype.popi = function() {
+    const t = this.tract.pop()
+    if (!t || t.type !== this.space.token.NUM) {
+        throw 'number is expected for @' + this.name
+    }
+    return t.val
+}
+
+Ghost.prototype.push = function(t) {
+    this.tract.push(t)
+}
+
 Ghost.prototype.evalSequence = function(sequence) {
     // save current exec state
     this.istack.push(this.cp)

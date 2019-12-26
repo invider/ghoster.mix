@@ -29,7 +29,6 @@ module.exports = function setup() {
         height: 32,
     })
     space.token = dna.dot.token
-    space.populate()
 
     const inky = new dna.dot.Ghost({
         x: 0,

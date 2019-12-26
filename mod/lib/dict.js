@@ -1,4 +1,14 @@
 
+// #system spells
+function replot(g) {
+    const h = g.popi()
+    const w = g.popi()
+
+    g.space.replot(w, h, true)
+}
+
+
+// #core spells
 function up(g) {
     if (g.y > 0) {
         g.y--
@@ -45,7 +55,7 @@ function right(g) {
 
 function dot(g) {
     if (g.tract.length > 0) {
-        const t = g.tract.pop()
+        const t = g.pop()
         g.space.set(g.x, g.y, t)
     } else {
         log('tract is empty!')
@@ -53,80 +63,81 @@ function dot(g) {
 }
 
 function lick(g) {
-    g.tract.push( g.space.get(g.x, g.y) )
+    g.push( g.space.get(g.x, g.y) )
 }
 
 function eat(g) {
-    g.tract.push( g.space.put(g.x, g.y, null) )
+    g.push( g.space.put(g.x, g.y, null) )
 }
 
+// #math spells
 function add(g) {
-    const a = g.tract.pop()
-    const b = g.tract.pop()
+    const a = g.pop()
+    const b = g.pop()
 
     if (a.type !== g.space.token.NUM || b.type !== g.space.token.NUM) {
         log('unable to add values ' + a.val + ' and ' + b.val)
     } else {
-        g.tract.push( g.space.token(a.val + b.val) )
+        g.push( g.space.token(a.val + b.val) )
     }
 }
 
 function sub(g) {
-    const a = g.tract.pop()
-    const b = g.tract.pop()
+    const a = g.pop()
+    const b = g.pop()
 
     if (a.type !== g.space.token.NUM || b.type !== g.space.token.NUM) {
         log('unable to sub values ' + a.val + ' and ' + b.val)
     } else {
-        g.tract.push( g.space.token(a.val - b.val) )
+        g.push( g.space.token(a.val - b.val) )
     }
 }
 
 function mul(g) {
-    const a = g.tract.pop()
-    const b = g.tract.pop()
+    const a = g.pop()
+    const b = g.pop()
 
     if (a.type !== g.space.token.NUM || b.type !== g.space.token.NUM) {
         log('unable to add values ' + a.val + ' and ' + b.val)
     } else {
-        g.tract.push( g.space.token(a.val * b.val) )
+        g.push( g.space.token(a.val * b.val) )
     }
 }
 
 function div(g) {
-    const a = g.tract.pop()
-    const b = g.tract.pop()
+    const a = g.pop()
+    const b = g.pop()
 
     if (a.type !== g.space.token.NUM || b.type !== g.space.token.NUM) {
         log('unable to divide values ' + a.val + ' and ' + b.val)
     } else {
-        g.tract.push( g.space.token(round(a.val / b.val)) )
+        g.push( g.space.token(round(a.val / b.val)) )
     }
 }
 
 function mod(g) {
-    const a = g.tract.pop()
-    const b = g.tract.pop()
+    const a = g.pop()
+    const b = g.pop()
 
     if (a.type !== g.space.token.NUM || b.type !== g.space.token.NUM) {
         log('unable to get reminder for values ' + a.val + ' and ' + b.val)
     } else {
-        g.tract.push( g.space.token(round(a.val % b.val)) )
+        g.push( g.space.token(round(a.val % b.val)) )
     }
 }
 
 function __pow__(g) {
-    const a = g.tract.pop()
-    const b = g.tract.pop()
+    const a = g.pop()
+    const b = g.pop()
 
     if (a.type !== g.space.token.NUM || b.type !== g.space.token.NUM) {
         log('unable to exponentiate ' + a.val + ' to ' + b.val)
     } else {
-        g.tract.push( g.space.token(pow(a.val, b.val)) )
+        g.push( g.space.token(pow(a.val, b.val)) )
     }
 }
 
 function __do__(g) {
-    const target = g.tract.pop()
+    const target = g.pop()
     g.evalSequence(target)
 }
