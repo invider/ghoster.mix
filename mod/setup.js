@@ -85,7 +85,7 @@ module.exports = function setup() {
             this.h = ry(1)
         },
     })
-    ghostView.focus = inky
+    ghostView.follow(inky)
 
     const panel = hud.spawn('hud/Container', {
         Z: 10,

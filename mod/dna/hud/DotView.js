@@ -8,8 +8,8 @@ function DotView(st) {
     this.showPort = true
 
     augment(this, st)
-    if (!this.gw) this.gw = this.space.width
-    if (!this.gh) this.gh = this.space.height
+    if (!this.gw) this.gw = this.space.w
+    if (!this.gh) this.gh = this.space.h
 
     this.bufCanvas = document.createElement('canvas')
     this.bufCanvas.width = this.gw
@@ -24,6 +24,22 @@ function DotView(st) {
     this.bufContext.moveTo(0, 0)
     this.bufContext.lineTo(48, 48)
     this.bufContext.stroke()
+}
+
+DotView.prototype.ghostX = function(x) {
+    return this.gx + floor(x/this.dotSize)
+}
+
+DotView.prototype.ghostY = function(y) {
+    return this.gy + floor(y/this.dotSize)
+}
+
+DotView.prototype.viewX = function(gx) {
+    return (gx - this.gx) * this.dotSize
+}
+
+DotView.prototype.viewY = function(gy) {
+    return (gy - this.gy) * this.dotSize
 }
 
 DotView.prototype.evo = function(dt) {}
@@ -71,6 +87,7 @@ DotView.prototype.draw = function() {
         const ds = this.w / this.gw
         const vpx = this.ghostView.gx - this.gx
         const vpy = this.ghostView.gy - this.gy
+        this.dotSize = ds
 
         stroke(.1, 1, 1)
         lineWidth(2)
@@ -87,4 +104,10 @@ DotView.prototype.draw = function() {
     rect(0, 0, this.w, this.h)
 
     restore()
+}
+
+DotView.prototype.onClick = function(x, y, e) {
+    const gx = this.ghostX(x)
+    const gy = this.ghostY(y)
+    this.ghostView.centerAt(gx, gy)
 }

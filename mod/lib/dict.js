@@ -11,7 +11,7 @@ function up(g) {
 }
 
 function down(g) {
-    if (g.y < g.space.height-1) {
+    if (g.y < g.space.h-1) {
         g.y++
         g.lastMove = 3
         g.moved = true
@@ -33,7 +33,7 @@ function left(g) {
 }
 
 function right(g) {
-    if (g.x < g.space.width-1) {
+    if (g.x < g.space.w-1) {
         g.x++
         g.lastMove = 4
         g.moved = true

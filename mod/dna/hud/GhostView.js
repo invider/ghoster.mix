@@ -20,6 +20,35 @@ function GhostView(st) {
     augment(this, st)
 }
 
+GhostView.prototype.follow = function(ghost) {
+    this.target = ghost
+
+    const view = this
+    ghost.onMove = function() {
+        console.dir(view.target)
+        if (view.target !== this) return
+        view.adjustViewport()
+    }
+}
+
+GhostView.prototype.centerAt = function(gx, gy) {
+    const tx = gx - floor(this.gw/2)
+    const ty = gy - floor(this.gh/2)
+
+    this.gx = limit(tx, 0, this.space.w - this.gw + 1)
+    this.gy = limit(ty, 0, this.space.h - this.gh + 1)
+
+    log(`looking at ${this.gx}x${this.gy}`)
+}
+
+GhostView.prototype.adjustViewport = function() {
+    log('!!!!!!!!!!!!!!!!!   adjusting view !!!!!!!!!!!!!!!!!!!!!!!!')
+    if (this.gx > this.target.x) this.gx = this.target.x
+    if (this.gy > this.target.y) this.gy = this.target.y
+    if (this.gx + this.gw - 4 < this.target.x) this.gx = max(this.target.x - this.gw + 2, 0)
+    if (this.gy + this.gh - 4 < this.target.y) this.gy = max(this.target.y - this.gh + 2, 0)
+}
+
 GhostView.prototype.evo = function(dt) {
     this.dt += dt
     if (this.dt >= env.tune.period) {
@@ -28,16 +57,7 @@ GhostView.prototype.evo = function(dt) {
     }
 }
 
-GhostView.prototype.adjustViewport = function() {
-    if (this.gx > this.focus.x) this.gx = this.focus.x
-    if (this.gy > this.focus.y) this.gy = this.focus.y
-    if (this.gx + this.gw - 4 < this.focus.x) this.gx = max(this.focus.x - this.gw + 2, 0)
-    if (this.gy + this.gh - 4 < this.focus.y) this.gy = max(this.focus.y - this.gh + 2, 0)
-}
-
 GhostView.prototype.draw = function() {
-    if (this.focus && this.focus.moved) this.adjustViewport()
-
     // adjust ghost space width and height
     const s = this.scale
     const hs = s/2
@@ -67,13 +87,14 @@ GhostView.prototype.draw = function() {
 
             if (!token) {
                 fill(.05, 0, .2, .6)
-                //circle(ix*s + s/2, iy*s + s/2, s*0.03)
+                circle(ix*s + s/2, iy*s + s/2, s*0.03)
                 continue
             }
 
             // show grid
             stroke(.05, 0, .2, 0.4)
             rect(ix*s, iy*s, s, s)
+
 
             if (token.type === dna.dot.token.NIL) {
                 fill(.05, 0, .2, .6)
