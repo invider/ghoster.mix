@@ -5,6 +5,7 @@ function DotView(st) {
     this.h = 200
     this.gx = 0
     this.gy = 0
+    this.showPort = true
 
     augment(this, st)
     if (!this.gw) this.gw = this.space.width
@@ -31,9 +32,6 @@ DotView.prototype.draw = function() {
     save()
     translate(this.x, this.y)
 
-    stroke(.1, .5, .5)
-    lineWidth(2)
-    rect(0, 0, this.w, this.h)
 
     // render grid data
     const idata = this.bufContext.getImageData(0, 0, this.gw, this.gh)
@@ -67,6 +65,26 @@ DotView.prototype.draw = function() {
 
     blocky()
     image(this.bufCanvas, 0, 0, this.w, this.h)
+
+    if (this.showPort) {
+        // highlight the port to the ghost view
+        const ds = this.w / this.gw
+        const vpx = this.ghostView.gx - this.gx
+        const vpy = this.ghostView.gy - this.gy
+
+        stroke(.1, 1, 1)
+        lineWidth(2)
+
+        const x = max(vpx*ds, 2)
+        const y = max(vpy*ds, 2)
+        const w = min(this.ghostView.gw * ds, this.w-x-2)
+        const h = min(this.ghostView.gh * ds, this.h-y-2)
+        rect(x, y, w, h)
+    }
+
+    stroke(.1, .5, .5)
+    lineWidth(2)
+    rect(0, 0, this.w, this.h)
 
     restore()
 }

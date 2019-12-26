@@ -3,6 +3,8 @@ function up(g) {
     if (g.y > 0) {
         g.y--
         g.lastMove = 1
+        g.moved = true
+
     } else {
         log('unable to move up')
     }
@@ -12,6 +14,8 @@ function down(g) {
     if (g.y < g.space.height-1) {
         g.y++
         g.lastMove = 3
+        g.moved = true
+
     } else {
         log('unable to move down')
     }
@@ -21,6 +25,8 @@ function left(g) {
     if (g.x > 0) {
         g.x--
         g.lastMove = 2
+        g.moved = true
+
     } else {
         log('unable to move left')
     }
@@ -30,6 +36,8 @@ function right(g) {
     if (g.x < g.space.width-1) {
         g.x++
         g.lastMove = 4
+        g.moved = true
+
     } else {
         log('unable to move right')
     }

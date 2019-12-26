@@ -1,3 +1,4 @@
+/*
 const palette = {
     red: '#ff0000',
     green: '#00ff00', 
@@ -8,24 +9,6 @@ const palette = {
     white: '#ffffff',
     black: '#000000',
     gray: '#808080',
-
-    // solarized
-    base03: '#002b36',
-    base02: '#073642',
-    base01: '#586e75',
-    base00: '#647b83',
-    base0:  '#839496',
-    base1:  '#93a1a1',
-    base2:  '#eee8d5',
-    base3:  '#fdf6e3',
-    byellow: '#b58900',
-    borange: '#cb4b16',
-    bred:    '#dc322f',
-    bmagenta: '#d33682',
-    bviolet: '#6c71c4',
-    bblue: '#268bd2',
-    bcyan: '#2aa198',
-    bgreen: '#859900',
 }
 
 function generatePalette(d) {
@@ -35,14 +18,15 @@ function generatePalette(d) {
         d[k] = tok(palette[k], tok.DOT)
     })
 }
+*/
 
 module.exports = function setup() {
 
     // ghost space construction
     const space = lab.spawn(dna.dot.Space, {
         name: 'space',
-        width: 16,
-        height: 16,
+        width: 32,
+        height: 32,
     })
     space.token = dna.dot.token
     space.populate()
@@ -56,7 +40,7 @@ module.exports = function setup() {
     space.ghost.push(inky)
 
     // fix dictionary
-    generatePalette(lib.dict)
+    //generatePalette(lib.dict)
     
     // rename escaped functions like do and pow
     Object.keys(lib.dict)
@@ -83,7 +67,7 @@ module.exports = function setup() {
         name: 'hud',
     })
 
-    hud.spawn(dna.hud.GhostView, {
+    const ghostView = hud.spawn(dna.hud.GhostView, {
         Z: 1,
         name: 'gspace',
         space: space,
@@ -97,10 +81,11 @@ module.exports = function setup() {
         adjust: function() {
             this.x = 0
             this.y = 0
-            this.w = rx(1)
+            this.w = rx(0.7)
             this.h = ry(1)
         },
     })
+    ghostView.focus = inky
 
     const panel = hud.spawn('hud/Container', {
         Z: 10,
@@ -127,6 +112,7 @@ module.exports = function setup() {
         Z: 5,
         name: 'dspace',
         space: space,
+        ghostView: ghostView,
 
         adjust: function() {
             const b = this.__.border
@@ -169,4 +155,7 @@ module.exports = function setup() {
             this.h = 200
         },
     })
+
+    ghostView.gx = 4
+    ghostView.gy = 1
 }

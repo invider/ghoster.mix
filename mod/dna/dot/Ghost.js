@@ -60,9 +60,11 @@ Ghost.prototype.evo = function(t) {
         if (isFun(f)) {
             log.raw('^ ' + this.space.token.dump(t))
             f(this)
+
         } else if (f) {
             log.raw('v ' + this.space.token.dump(t))
             this.tract.push(f)
+
         } else {
             log('unable to find word [' + t.val + '] in ' + this.name + ' dictionary:')
             console.dir(this.dict)

@@ -64,6 +64,9 @@ Space.prototype.touchArea = function(x, y, w, h, fn) {
 }
 
 Space.prototype.next = function() {
-    this.ghost.forEach(g => g.next())
+    this.ghost.forEach(g => {
+        g.moved = false
+        g.next()
+    })
 }
 

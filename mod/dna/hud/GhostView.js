@@ -16,21 +16,28 @@ function GhostView(st) {
     this.font2 = '20px coolville'
 
     this.dt = 0
-    this.period = 1
 
     augment(this, st)
-
 }
 
 GhostView.prototype.evo = function(dt) {
     this.dt += dt
-    if (this.dt >= this.period) {
+    if (this.dt >= env.tune.period) {
         this.space.next()
-        this.dt -= this.period
+        this.dt -= env.tune.period
     }
 }
 
+GhostView.prototype.adjustViewport = function() {
+    if (this.gx > this.focus.x) this.gx = this.focus.x
+    if (this.gy > this.focus.y) this.gy = this.focus.y
+    if (this.gx + this.gw - 4 < this.focus.x) this.gx = max(this.focus.x - this.gw + 2, 0)
+    if (this.gy + this.gh - 4 < this.focus.y) this.gy = max(this.focus.y - this.gh + 2, 0)
+}
+
 GhostView.prototype.draw = function() {
+    if (this.focus && this.focus.moved) this.adjustViewport()
+
     // adjust ghost space width and height
     const s = this.scale
     const hs = s/2
