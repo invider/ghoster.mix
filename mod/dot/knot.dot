@@ -1,0 +1,24 @@
+
+@inky
+
+16 16 replot -- 16x16
+
+-- solarized
+base03: $002b36 . >
+base02: $073642 . >
+base01: $586e75 . >
+base00: $647b83 . >
+base0:  $839496 . >
+base1:  $93a1a1 . >
+base2:  $eee8d5 . > 
+base3:  $fdf6e3 . >
+
+byellow: $b58900 . >
+borange: $cb4b16 . >
+bred:    $dc322f . >
+bmagenta: $d33682 . >
+bviolet: $6c71c4 . >
+bblue: $268bd2 . >
+bcyan: $2aa198 . >
+bgreen: $859900 . >
+

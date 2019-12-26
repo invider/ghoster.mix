@@ -58,7 +58,21 @@ module.exports = function setup() {
         if (k === '_' || k === '__') return
         inky.dict[k] = lib.dict[k]
     })
-    inky.schedule($.dot.sys)
+
+    // boot
+    if (env.config.boot) {
+        const routines = env.config.boot.split(',')
+        routines.forEach(name => {
+            const seq = $.dot.selectOne(name)
+            if (seq) {
+                inky.schedule(seq)
+            } else {
+                log.warn(`can't find boot routine ${name}`)
+            }
+        })
+    } else {
+        inky.schedule($.dot.sys)
+    }
 
     // construct the view
     const hud = lab.spawn('hud/Hud', {

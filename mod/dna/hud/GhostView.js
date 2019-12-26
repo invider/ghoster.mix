@@ -34,8 +34,8 @@ GhostView.prototype.centerAt = function(gx, gy) {
     const tx = gx - floor(this.gw/2)
     const ty = gy - floor(this.gh/2)
 
-    this.gx = limit(tx, 0, this.space.w - this.gw + 1)
-    this.gy = limit(ty, 0, this.space.h - this.gh + 1)
+    this.gx = limit(tx, 0, max(this.space.w - this.gw + 1, 0))
+    this.gy = limit(ty, 0, max(this.space.h - this.gh + 1, 0))
 
     log(`looking at ${gx}x${gy}`)
     log(`top left is ${this.gx}x${this.gy}`)
