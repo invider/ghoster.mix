@@ -13,6 +13,8 @@ and now some comments
 white: $ffffff . >
 black: $000000 . >
 
+-- link token, system should resolve links
+
 
 draw:
     -- solarized
