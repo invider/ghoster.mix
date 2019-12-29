@@ -139,13 +139,11 @@ GhostView.prototype.draw = function() {
         }
     }
 
+    const target = this.target
     this.space.ghost.forEach(g => {
         let vx = g.x - gx
         let vy = g.y - gy
         if (vx >= 0 && vx < gw && vy >= 0 && vy < gh) {
-            //lineWidth(2)
-            //stroke(.02, .5, .5)
-            //circle(vx*s+hs, vy*s+hs, hs-4) 
             let img
             switch(g.lastMove) {
             case 1: img = res.ghost[1]; break;
@@ -155,6 +153,12 @@ GhostView.prototype.draw = function() {
             }
 
             image(img, vx*s, vy*s, s, s)
+
+            if (g === target) {
+                lineWidth(2)
+                stroke(.2, .5, .5)
+                rect(vx*s, vy*s, s, s) 
+            }
         }
     })
 

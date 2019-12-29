@@ -141,7 +141,7 @@ module.exports = function setup() {
         text: 'step',
 
         onClick: function() {
-            log('stopping')
+            log('stepping in...')
         },
 
         adjust: function() {
@@ -150,6 +150,22 @@ module.exports = function setup() {
             this.y = this.__.dspace.y + this.__.dspace.h + this.__.border
             this.w = this.__.dspace.w/4
             this.h = 100
+        },
+    })
+
+    panel.spawn(dna.hud.DictView, {
+        Z: 2,
+        name: 'dict',
+        ghost: inky,
+        x: rx(.05),
+        y: ry(.7),
+
+        adjust: function() {
+            if (!this.__) return
+            this.x = this.__.border
+            this.y = this.__.step.y + this.__.step.h + this.__.border
+            this.w = this.__.dspace.w
+            this.h = 200
         },
     })
 
@@ -163,7 +179,7 @@ module.exports = function setup() {
         adjust: function() {
             if (!this.__) return
             this.x = this.__.border
-            this.y = this.__.step.y + this.__.step.h + this.__.border
+            this.y = this.__.dict.y + this.__.dict.h + this.__.border
             this.w = this.__.dspace.w/4
             this.h = 200
         },

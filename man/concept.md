@@ -45,8 +45,34 @@ Design Decisions
 
 * save and mark the ghost position to jump back and redo updated command
 
+* *The Spell Path* - the road with tokens, loops and conditional turns
+
+* Ghots can have moods which affect their behavior.
+    * explore mood - just move without default interaction
+    * lick mood - taste what is under ghost feets
+    * pacman mood - eat everything in the path
+    * spawn mood - each move spawn and place the thing on top of the stack
+    * drop mode - drop 
+
+
+
+
 Open Questions
 --------------
 
+? should tract and items/memory/dictionary be the same thing? (probably yes)
+
+? main pattern for complex programs is to layout flow on the grid with tokens
+  the ghost will run and lick all the instructions (?) and then will do them as a spell
+
+? all spells are set as tokens on the map and then will be eaten later by ghosts who will learn stuff
+
 ? tokens/words/commands/spells - what is the terminology here?
+
+Story Topics
+------------
+
+* garbage/littering story - once a ghost is not carefull about the garbage she drops,
+  and another ghosts might be confused, and the whole ghost town eventually can turn
+  into a one big garbage dump
 
