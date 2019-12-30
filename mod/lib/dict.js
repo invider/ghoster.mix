@@ -7,7 +7,6 @@ function replot(g) {
     g.space.replot(w, h, true)
 }
 
-
 // #core spells
 function up(g) {
     if (g.y > 0) {
@@ -71,7 +70,10 @@ function lick(g) {
 }
 
 function eat(g) {
-    g.push( g.space.put(g.x, g.y, null) )
+    const token = g.space.put(g.x, g.y, undefined)
+    if (token && token.type) {
+        g.push(token)
+    }
 }
 
 // #math spells
@@ -144,4 +146,23 @@ function __pow__(g) {
 function __do__(g) {
     const target = g.pop()
     g.doSequence(target)
+}
+
+function learn(g) {
+    const f = g.pop()
+    if (f && f.name) {
+
+        if (f.type === g.space.token.LIST) {
+            const f2 = g.space.token(f.val, f.type, f.name)
+            f2.exec = true
+            g.dict[f2.name] = f2
+            console.dir(f2)
+
+        } else {
+            g.dict[f.name] = f
+        }
+    } else {
+        log('unable to learn')
+        log.dump(f)
+    }
 }

@@ -82,13 +82,27 @@ Ghost.prototype.doToken = function(t) {
         // try to bind
         const f = this.dict[t.val]
 
-        if (isFun(f)) {
-            log.raw('^ ' + this.space.token.dump(t))
-            f(this)
+        if (f) {
+            if (isFun(f)) {
+                if (env.config.trace) {
+                    log.raw(`@${this.name}: ^${this.space.token.dump(t)}`)
+                }
+                f(this)
 
-        } else if (f) {
-            log.raw('v ' + this.space.token.dump(t))
-            this.tract.push(f)
+            } else if (f.type === this.space.token.LIST
+                    && f.exec) {
+                if (env.config.trace) {
+                    log.raw(`@${this.name}: ~^${this.space.token.dump(t)}`)
+                }
+                this.doSequence(f)
+
+            } else {
+                if (env.config.trace) {
+                    log.raw(`@${this.name}: v${this.space.token.dump(t)}`)
+                    this.tract.push(f)
+                }
+
+            }
 
         } else {
             log('unable to find word [' + t.val + '] in ' + this.name + ' dictionary:')
@@ -96,7 +110,9 @@ Ghost.prototype.doToken = function(t) {
         }
 
     } else if (t.type === this.space.token.LIST && t.exec) {
-        log.raw('~ ' + this.space.token.dump(t))
+        if (env.config.trace) {
+            log.raw(`@${this.name}: ~${this.space.token.dump(t)}`)
+        }
 
         this.doSequence(t)
         /*
@@ -107,7 +123,9 @@ Ghost.prototype.doToken = function(t) {
         */
 
     } else {
-        log.raw('v ' + this.space.token.dump(t))
+        if (env.config.trace) {
+            log.raw(`@${this.name}: v${this.space.token.dump(t)}`)
+        }
         this.tract.push(t)
     }
 }

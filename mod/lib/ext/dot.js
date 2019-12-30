@@ -409,7 +409,7 @@ function parse(src) {
         throw "syntax error: unrecognized lexem #" + t.type + ': ' + t.val
     }
 
-    function doBlock(tab) {
+    function doBlock(tab, label) {
         const list = []
 
         let token
@@ -417,7 +417,7 @@ function parse(src) {
             list.push(token)
         }
 
-        return tok(list)
+        return tok(list, tok.LIST, label)
     }
 
     const sq = doBlock(0)
