@@ -1,3 +1,4 @@
 const tune = {
-    period: 0.1,
+    period: 0.25,
+    tasksForStepLimit: 1024,
 }

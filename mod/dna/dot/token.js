@@ -16,6 +16,10 @@ const UNKNOWN = 99
 const TOKEN_OUT = new Token(OUT, '--out--')
 const TOKEN_NIL = new Token(NIL)
 
+const stat = {
+    tokens: 0,
+}
+
 function Token(t, v) {
     this.type = t
     this.val = v
@@ -47,6 +51,7 @@ function token(val, type, name) {
     }
 
     const t = new Token()
+    stat.tokens++
     if (val) t.val = val
     if (name) t.name = name
 
@@ -118,6 +123,8 @@ token.dump = function(t) {
     return d + v
 }
 
+token.stat = stat
+
 token.OUT = OUT
 token.NIL = NIL
 token.DOT = DOT
@@ -133,3 +140,4 @@ token.UNKNOWN = UNKNOWN
 
 token.TOKEN_OUT = TOKEN_OUT
 token.TOKEN_NIL = TOKEN_NIL
+

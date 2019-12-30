@@ -13,6 +13,7 @@ function up(g) {
     if (g.y > 0) {
         g.y--
         g.lastMove = 1
+        g.moves ++
         g.moved = true
 
     } else {
@@ -24,6 +25,7 @@ function down(g) {
     if (g.y < g.space.h-1) {
         g.y++
         g.lastMove = 3
+        g.moves ++
         g.moved = true
 
     } else {
@@ -35,6 +37,7 @@ function left(g) {
     if (g.x > 0) {
         g.x--
         g.lastMove = 2
+        g.moves ++
         g.moved = true
 
     } else {
@@ -46,6 +49,7 @@ function right(g) {
     if (g.x < g.space.w-1) {
         g.x++
         g.lastMove = 4
+        g.moves ++
         g.moved = true
 
     } else {
@@ -139,5 +143,5 @@ function __pow__(g) {
 
 function __do__(g) {
     const target = g.pop()
-    g.evalSequence(target)
+    g.doSequence(target)
 }

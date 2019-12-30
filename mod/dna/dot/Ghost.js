@@ -19,6 +19,8 @@ function Ghost(st) {
     this.dict = {}
     this.todo = [] // list of data and routine tokens
     this.cp = 0
+    this.tasks = 0
+    this.moves = 0
     this.sequence
     this.istack = [] // cp call stack
     this.cstack = [] // command sequence stack
@@ -49,7 +51,7 @@ Ghost.prototype.push = function(t) {
     this.tract.push(t)
 }
 
-Ghost.prototype.evalSequence = function(sequence) {
+Ghost.prototype.doSequence = function(sequence) {
     // save current exec state
     this.istack.push(this.cp)
     this.cstack.push(this.sequence)
@@ -58,7 +60,7 @@ Ghost.prototype.evalSequence = function(sequence) {
     this.sequence = sequence
 }
 
-Ghost.prototype.evalReturn = function() {
+Ghost.prototype.doReturn = function() {
     if (this.istack.length === 0) {
         this.cp = 0
         this.sequence = undefined
@@ -71,7 +73,10 @@ Ghost.prototype.evalReturn = function() {
     return true
 }
 
-Ghost.prototype.evo = function(t) {
+Ghost.prototype.doToken = function(t) {
+    if (!t) return
+
+    this.tasks ++
     if (t.type === this.space.token.SYM) {
 
         // try to bind
@@ -93,11 +98,11 @@ Ghost.prototype.evo = function(t) {
     } else if (t.type === this.space.token.LIST && t.exec) {
         log.raw('~ ' + this.space.token.dump(t))
 
-        this.evalSequence(t)
+        this.doSequence(t)
         /*
         const g = this
         t.val.forEach(t => {
-            g.evo(t)
+            g.doToken(t)
         })
         */
 
@@ -126,22 +131,36 @@ Ghost.prototype.next = function() {
         if (!this.nextTask()) return
     }
 
+    // TODO todo should not be only a sequence, but a single spell
     const token = this.sequence.val[this.cp++]
-    this.evo(token)
+    this.doToken(token)
 
     if (this.cp >= this.sequence.val.length) {
-        this.evalReturn()
+        this.doReturn()
     }
-    /*
-    if (this.todo.length > 0) {
-        //console.table(this.tract)
+}
 
-        const task = this.todo[0]
-        this.todo.splice(0, 1)
+Ghost.prototype.nextStep = function() {
 
-        this.evo(task)
-    }
-    */
+    let task = 0
+    do {
+        if (!this.sequence) {
+            if (!this.nextTask()) return
+        }
+
+        if (this.sequence.type === this.space.token.LIST) {
+            const token = this.sequence.val[this.cp++]
+            this.doToken(token)
+
+            if (this.cp >= this.sequence.val.length) {
+                this.doReturn()
+            }
+        } else {
+            this.doToken(this.sequence)
+            this.sequence = undefined
+        }
+
+    } while (this.sequence && !this.moved)
 }
 
 Ghost.prototype.schedule = function(taskToken) {

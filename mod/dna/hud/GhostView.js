@@ -42,10 +42,18 @@ GhostView.prototype.centerAt = function(gx, gy) {
 }
 
 GhostView.prototype.adjustViewport = function() {
-    if (this.gx > this.target.x) this.gx = this.target.x
-    if (this.gy > this.target.y) this.gy = this.target.y
-    if (this.gx + this.gw - 4 < this.target.x) this.gx = max(this.target.x - this.gw + 2, 0)
-    if (this.gy + this.gh - 4 < this.target.y) this.gy = max(this.target.y - this.gh + 2, 0)
+    const b = 4
+    if (this.gx+1 > this.target.x) this.gx = max(this.target.x - 1, 0)
+    if (this.gy+1 > this.target.y) this.gy = max(this.target.y - 1, 0)
+
+    if (this.gx + this.gw-b < this.target.x) {
+        this.gx = limit(this.target.x - this.gw+b, 0,
+            this.space.w - this.gw + 1)
+    }
+    if (this.gy + this.gh-b < this.target.y) {
+        this.gy = limit(this.target.y - this.gh+b, 0,
+            this.space.h - this.gh + 1)
+    }
 }
 
 GhostView.prototype.evo = function(dt) {
@@ -54,6 +62,26 @@ GhostView.prototype.evo = function(dt) {
         this.space.next()
         this.dt -= env.tune.period
     }
+}
+
+function frameTargetGhost(vx, vy, s) {
+    lineWidth(2)
+    stroke(.2, .5, .5)
+
+    const l = s/5
+    line(vx*s, vy*s, vx*s + l, vy*s)
+    line(vx*s, vy*s, vx*s, vy*s + l)
+
+    line(vx*s+s, vy*s, vx*s+s - l, vy*s)
+    line(vx*s+s, vy*s, vx*s+s, vy*s + l)
+
+    line(vx*s, vy*s + s, vx*s, vy*s + s - l)
+    line(vx*s, vy*s + s, vx*s + l, vy*s + s)
+
+    line(vx*s + s, vy*s + s, vx*s + s -l, vy*s + s)
+    line(vx*s + s, vy*s + s, vx*s + s, vy*s + s - l)
+
+    //rect(vx*s, vy*s, s, s) 
 }
 
 GhostView.prototype.draw = function() {
@@ -155,9 +183,7 @@ GhostView.prototype.draw = function() {
             image(img, vx*s, vy*s, s, s)
 
             if (g === target) {
-                lineWidth(2)
-                stroke(.2, .5, .5)
-                rect(vx*s, vy*s, s, s) 
+                frameTargetGhost(vx, vy, s)
             }
         }
     })
