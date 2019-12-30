@@ -16,15 +16,13 @@ TractView.prototype.draw = function() {
     alignLeft()
     fill(.05, .7, .4)
 
-    text(this.ghost.name + ' tract:', x, y)
+    text(this.ghost.name + ' - ' + this.ghost.getMood(), x, y)
     y += step
 
     this.ghost.tract.forEach(e => {
         const txt = e? e.val : 'undef'
         text(txt, x, y)
         y += step
-
-        if (e.val === undefined) debugger
     })
 }
 

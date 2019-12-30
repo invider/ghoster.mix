@@ -8,13 +8,19 @@ const ghostNames = [
     'clyde',
 ]
 
+const EXPLORING = 0
+const HUNGRY = 1
+const DROPY = 2
+const SAMPLE = 3
+const LOOPY = 4
+
 let instances = 0
 
 function Ghost(st) {
     instances++
     this.name = ghostNames[instances] || ghostNames[0] + instances
 
-    this.mood = 0
+    this.mood = EXPLORING
     this.ink = 100 // ghost mana and energy
     this.dict = {}
     this.todo = [] // list of data and routine tokens
@@ -29,6 +35,21 @@ function Ghost(st) {
     this.x = st.x
     this.y = st.y
     this.space = st.space
+}
+
+Ghost.prototype.nextMood = function() {
+    this.mood ++
+    if (this.mood > LOOPY) this.mood = 0
+}
+
+Ghost.prototype.getMood = function() {
+    switch(this.mood) {
+        case EXPLORING: return 'exploring';
+        case HUNGRY: return 'hungry';
+        case DROPY: return 'dropy';
+        case SAMPLE: return 'sample';
+        case LOOPY: return 'loopy';
+    }
 }
 
 Ghost.prototype.peek = function() {
@@ -130,6 +151,18 @@ Ghost.prototype.doToken = function(t) {
     }
 }
 
+Ghost.prototype.postMove = function() {
+    if (this.mood === 0) return
+
+    const tk = this.space.token
+    switch(this.mood) {
+        case HUNGRY: this.doToken(tk('eat')); break;
+        case DROPY: this.doToken(tk('dot')); break;
+        case SAMPLE: this.doToken(tk('lick')); break;
+        case LOOPY: break;
+    }
+}
+
 Ghost.prototype.nextTask = function() {
     if (this.todo.length > 0) {
         this.cp = 0
@@ -156,6 +189,8 @@ Ghost.prototype.next = function() {
     if (this.cp >= this.sequence.val.length) {
         this.doReturn()
     }
+
+    if (this.moved) this.postMove()
 }
 
 Ghost.prototype.nextStep = function() {
@@ -179,6 +214,8 @@ Ghost.prototype.nextStep = function() {
         }
 
     } while (this.sequence && !this.moved)
+
+    if (this.moved) this.postMove()
 }
 
 Ghost.prototype.schedule = function(taskToken) {

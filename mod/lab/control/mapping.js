@@ -7,12 +7,12 @@ const mapping = {
         [
         'KeyW', 'KeyA', 'KeyS', 'KeyD',
         'ShiftLeft', 'KeyQ', 'KeyX', 'KeyQ',
-        'KeyZ',
+        'KeyZ', 'Tab',
         ],
         [
         'ArrowUp', 'ArrowLeft', 'ArrowDown', 'ArrowRight',
         'ShiftRight', 'Backspace', 'Space', 'Enter',
-        'Slash',
+        'Slash', 'Backslash',
         ],
     ],
 
@@ -28,6 +28,7 @@ const mapping = {
             0,
             1,
             8,
+            9,
         ],
     },
 

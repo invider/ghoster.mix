@@ -9,6 +9,7 @@ const A = 7
 const B = 8
 
 const MODE = 9
+const NEXT = 10
 
 const active = []
 
@@ -39,6 +40,9 @@ function evo(dt) {
             lastMove = env.tune.period
         } else if (active[B]) {
             ghost.todo.push(tk('eat'))
+            lastMove = env.tune.period
+        } else if (active[MODE]) {
+            ghost.nextMood()
             lastMove = env.tune.period
         }
 
