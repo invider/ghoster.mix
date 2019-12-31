@@ -1,3 +1,4 @@
+// @require(/lab/control/moveFlow
 const UP = 1
 const LEFT = 2
 const DOWN = 3
@@ -13,12 +14,16 @@ const NEXT = 10
 
 const active = []
 
-function touch(id) {
+function init() {
+    this.flow = lab.control.moveFlow
+}
+
+function touch(id, player) {
     if (!id) return
     active[id] = true
 }
 
-function stop(id) {
+function stop(id, player) {
     if (!id) return
     active[id] = false
 }
@@ -31,32 +36,42 @@ function evo(dt) {
             && lab.hud.gspace.target
             && lab.hud.gspace.target.todo.length === 0) {
 
+        const flow = lab.control.flow
         const ghost = lab.hud.gspace.target
-        const tk = dna.dot.token
 
-
-        if (active[A]) {
-            ghost.todo.push(tk('dot'))
+        if (active[UP]) {
+            this.flow.up()
             lastMove = env.tune.period
-        } else if (active[B]) {
-            ghost.todo.push(tk('eat'))
+        } else if (active[LEFT]) {
+            this.flow.left()
             lastMove = env.tune.period
-        } else if (active[MODE]) {
-            ghost.nextMood()
+        } else if (active[DOWN]) {
+            this.flow.down()
+            lastMove = env.tune.period
+        } else if (active[RIGHT]) {
+            this.flow.right()
             lastMove = env.tune.period
         }
 
-        if (active[UP]) {
-            ghost.todo.push(tk('up'))
+        if (active[Y]) {
+            this.flow.y()
             lastMove = env.tune.period
-        } else if (active[LEFT]) {
-            ghost.todo.push(tk('left'))
+        } else if (active[X]) {
+            this.flow.x()
             lastMove = env.tune.period
-        } else if (active[DOWN]) {
-            ghost.todo.push(tk('down'))
+        } else if (active[A]) {
+            this.flow.a()
             lastMove = env.tune.period
-        } else if (active[RIGHT]) {
-            ghost.todo.push(tk('right'))
+        } else if (active[B]) {
+            this.flow.b()
+            lastMove = env.tune.period
+        }
+
+        if (active[MODE]) {
+            this.flow.mode()
+            lastMove = env.tune.period
+        } else if (active[NEXT]) {
+            this.flow.next()
             lastMove = env.tune.period
         }
     }

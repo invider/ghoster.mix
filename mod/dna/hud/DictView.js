@@ -43,11 +43,9 @@ DictView.prototype.draw = function() {
     }
 
     lineWidth(2)
-    stroke(.75, .4, .4)
+    if (this.focus) stroke(.3, .7, .7)
+    else stroke(.75, .4, .4)
     rect(0, 0, this.w, this.h)
-
-
-
 
     restore()
 }
