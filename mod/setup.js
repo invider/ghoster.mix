@@ -49,7 +49,7 @@ module.exports = function setup() {
 
             log('renaming ' + k + ' -> ' + nk)
             lib.dict[nk] = lib.dict[k]
-            lib.dict[k] = undefined
+            delete lib.dict[k]
         })
 
 

@@ -5,17 +5,24 @@ function empty() {
 
 function init() {
 
-    this.up = empty
+    this.up = function() {
+        lab.hud.panel.dict.up()
+    }
     this.left = empty
-    this.down = empty
+    this.down = function() {
+        lab.hud.panel.dict.down()
+    }
     this.right = empty
 
     this.y = empty
-    this.x = empty
-    this.a = function() {
-        log('done')
+    this.x = function() {
         lab.hud.panel.dict.focus = false
         lab.control.player.flow = lab.control.moveFlow
+    }
+    this.a = function() {
+        lab.hud.panel.dict.focus = false
+        lab.control.player.flow = lab.control.moveFlow
+        lab.hud.panel.dict.cast()
     }
     this.b = empty
 
