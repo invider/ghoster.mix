@@ -16,6 +16,7 @@ function GhostView(st) {
     this.font2 = '20px coolville'
 
     this.dt = 0
+    this.mode = 1
 
     augment(this, st)
 }
@@ -57,10 +58,28 @@ GhostView.prototype.adjustViewport = function() {
 }
 
 GhostView.prototype.evo = function(dt) {
-    this.dt += dt
-    if (this.dt >= env.tune.period) {
-        this.space.next()
-        this.dt -= env.tune.period
+    // scheduling
+    if (this.mode === 0) return // paused
+
+    switch(this.mode) {
+
+    case 1:
+        this.dt += dt
+        if (this.dt >= env.tune.period) {
+            const tasks = this.space.nextStep()
+            this.dt -= env.tune.period
+        }
+        break;
+
+    case 2:
+        const space = this.space
+        function step() {
+            const tasks = space.nextStep()
+            if (tasks > 0) setTimeout(step, 0)
+        }
+        setTimeout(step, 0)
+
+        break;
     }
 }
 

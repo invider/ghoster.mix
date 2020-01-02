@@ -24,7 +24,9 @@ function init() {
         lab.control.player.flow = lab.control.moveFlow
         lab.hud.panel.dict.cast()
     }
-    this.b = empty
+    this.b = function() {
+        lab.hud.panel.dict.push()
+    }
 
     this.mode = empty
     this.select = empty

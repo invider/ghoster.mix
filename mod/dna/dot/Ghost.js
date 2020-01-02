@@ -95,9 +95,8 @@ Ghost.prototype.doReturn = function() {
 }
 
 Ghost.prototype.doToken = function(t) {
-    if (!t) return
+    if (!t) return 0
 
-    this.tasks ++
     if (t.type === this.space.token.SYM) {
 
         // try to bind
@@ -149,6 +148,9 @@ Ghost.prototype.doToken = function(t) {
         }
         this.tract.push(t)
     }
+
+    this.tasks ++
+    return 1
 }
 
 Ghost.prototype.postMove = function() {
@@ -184,38 +186,40 @@ Ghost.prototype.next = function() {
 
     // TODO todo should not be only a sequence, but a single spell
     const token = this.sequence.val[this.cp++]
-    this.doToken(token)
+    const tasks = this.doToken(token)
 
     if (this.cp >= this.sequence.val.length) {
         this.doReturn()
     }
 
     if (this.moved) this.postMove()
+    return tasks
 }
 
 Ghost.prototype.nextStep = function() {
 
-    let task = 0
+    let tasks = 0
     do {
         if (!this.sequence) {
-            if (!this.nextTask()) return
+            if (!this.nextTask()) return 0
         }
 
         if (this.sequence.type === this.space.token.LIST) {
             const token = this.sequence.val[this.cp++]
-            this.doToken(token)
+            tasks += this.doToken(token)
 
             if (this.cp >= this.sequence.val.length) {
                 this.doReturn()
             }
         } else {
-            this.doToken(this.sequence)
+            tasks += this.doToken(this.sequence)
             this.sequence = undefined
         }
 
     } while (this.sequence && !this.moved)
 
     if (this.moved) this.postMove()
+    return tasks
 }
 
 Ghost.prototype.schedule = function(taskToken) {

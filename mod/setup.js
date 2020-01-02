@@ -136,20 +136,75 @@ module.exports = function setup() {
         }
     })
 
-    panel.spawn('hud/gadget/Button', {
-        name: 'step',
-        text: 'step',
+    const hspacing = 10
+
+    const stop = panel.spawn('hud/gadget/Button', {
+        name: 'stop',
+        text: 'stop',
 
         onClick: function() {
-            log('stepping in...')
+            log('stopping...')
+            lab.hud.gspace.mode = 0
         },
 
         adjust: function() {
             if (!this.__) return
             this.x = this.__.border
             this.y = this.__.dspace.y + this.__.dspace.h + this.__.border
-            this.w = this.__.dspace.w/4
-            this.h = 100
+            this.w = this.__.dspace.w/4 - hspacing
+            this.h = 40
+        },
+    })
+
+    const step = panel.spawn('hud/gadget/Button', {
+        name: 'step',
+        text: 'step',
+
+        onClick: function() {
+            log('stepping in...')
+            lab.space.nextStep()
+        },
+
+        adjust: function() {
+            if (!this.__) return
+            this.x = stop.x + stop.w + hspacing
+            this.y = this.__.dspace.y + this.__.dspace.h + this.__.border
+            this.w = this.__.dspace.w/4 - hspacing
+            this.h = 40
+        },
+    })
+
+    const slow = panel.spawn('hud/gadget/Button', {
+        name: 'slow',
+        text: 'slow',
+
+        onClick: function() {
+            lab.hud.gspace.mode = 1
+        },
+
+        adjust: function() {
+            if (!this.__) return
+            this.x = step.x + step.w + hspacing
+            this.y = this.__.dspace.y + this.__.dspace.h + this.__.border
+            this.w = this.__.dspace.w/4 - hspacing
+            this.h = 40
+        },
+    })
+
+    const fast = panel.spawn('hud/gadget/Button', {
+        name: 'fast',
+        text: 'fast',
+
+        onClick: function() {
+            lab.hud.gspace.mode = 2
+        },
+
+        adjust: function() {
+            if (!this.__) return
+            this.x = slow.x + slow.w + hspacing
+            this.y = this.__.dspace.y + this.__.dspace.h + this.__.border
+            this.w = this.__.dspace.w/4 - hspacing
+            this.h = 40
         },
     })
 
@@ -187,4 +242,6 @@ module.exports = function setup() {
 
     ghostView.gx = 4
     ghostView.gy = 1
+
+    ghostView.mode = 2
 }
