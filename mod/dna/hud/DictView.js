@@ -46,7 +46,7 @@ DictView.prototype.cast = function() {
     const name = Object.keys(this.ghost.dict)[this.selected]
     const token = this.ghost.dict[name]
     if (token) {
-        this.ghost.todo.push(token)
+        this.ghost.todo.push(dna.dot.token(name))
     }
 }
 
