@@ -10,7 +10,9 @@ const CHAR = 5
 const STR = 6
 const LOC = 7
 const ROUT = 8 // TODO ??? do we actually need this type?
+const SYS = 9
 const LIST = 11
+const SPECIAL = 13
 const UNKNOWN = 99
 
 const TOKEN_OUT = new Token(OUT, '--out--')
@@ -44,7 +46,7 @@ function hex(str) {
 
 function token(val, type, name) {
     // TODO lookup in the buffer first
-    if (val instanceof Token) return val // value already tokenized
+    if (val instanceof Token || val.type) return val // value already tokenized
 
     if (!name && (val === undefined || val === null)) {
         return TOKEN_NIL
@@ -135,7 +137,9 @@ token.CHAR = CHAR
 token.STR = STR
 token.LOC = LOC
 token.ROUT = ROUT
+token.SYS = SYS
 token.LIST = LIST
+token.SPECIAL = SPECIAL
 token.UNKNOWN = UNKNOWN
 
 token.TOKEN_OUT = TOKEN_OUT

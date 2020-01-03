@@ -1,26 +1,4 @@
-/*
-const palette = {
-    red: '#ff0000',
-    green: '#00ff00', 
-    blue: '#0000ff', 
-    yellow: '#ffff00',
-    cyan: '#00ffff',
-    magenta: '#ff00ff',
-    white: '#ffffff',
-    black: '#000000',
-    gray: '#808080',
-}
-
-function generatePalette(d) {
-    const tok = lab.space.token
-
-    Object.keys(palette).forEach(k => {
-        d[k] = tok(palette[k], tok.DOT)
-    })
-}
-*/
-
-module.exports = function setup() {
+function setup() {
 
     // ghost space construction
     const space = lab.spawn(dna.dot.Space, {
@@ -52,6 +30,9 @@ module.exports = function setup() {
             delete lib.dict[k]
         })
 
+    dna.dot.item._ls.forEach(item => {
+        lib.dict[item.name] = item
+    })
 
     // teach inky everything
     Object.keys(lib.dict).forEach(k => {

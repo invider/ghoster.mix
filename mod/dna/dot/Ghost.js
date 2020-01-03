@@ -117,16 +117,14 @@ Ghost.prototype.doToken = function(t) {
                 this.doSequence(f)
 
             } else {
+                this.tract.push(f)
                 if (env.config.trace) {
                     log.raw(`@${this.name}: v${this.space.token.dump(t)}`)
-                    this.tract.push(f)
                 }
-
             }
 
         } else {
             log('unable to find word [' + t.val + '] in ' + this.name + ' dictionary:')
-            console.dir(this.dict)
         }
 
     } else if (t.type === this.space.token.LIST && t.exec) {
@@ -146,6 +144,8 @@ Ghost.prototype.doToken = function(t) {
         if (env.config.trace) {
             log.raw(`@${this.name}: v${this.space.token.dump(t)}`)
         }
+        if (t.type === this.space.token.SPECIAL) console.dir(t)
+        log(t.type)
         this.tract.push(t)
     }
 

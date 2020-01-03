@@ -150,7 +150,15 @@ GhostView.prototype.draw = function() {
                 fill(.05, 0, .2, .6)
                 circle(ix*s + s/2, iy*s + s/2, s*0.03)
                 //rect(ix*s, iy*s, s, s)
-                
+            } else if ( token.type === dna.dot.token.DOT ) {
+                fill(token.val)
+                rect(ix*s+M, iy*s+M, s-M2, s-M2)
+
+            } else if ( token.type === dna.dot.token.SPECAIL) {
+                fill(.05, 0, .2, .6)
+                rect(ix*s, iy*s, s, s)
+                debugger
+
             } else if (token.type === dna.dot.token.NUM ) {
                 font(this.font2)
                 baseMiddle()
@@ -172,10 +180,6 @@ GhostView.prototype.draw = function() {
                 alignCenter()
                 fill(.05, .7, .4)
                 text(token.val.substring(0,3), ix*s+hs, iy*s+hs)
-
-            } else if ( token.type === dna.dot.token.DOT ) {
-                fill(token.val)
-                rect(ix*s+M, iy*s+M, s-M2, s-M2)
 
             } else {
                 font(this.font2)
