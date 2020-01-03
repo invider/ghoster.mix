@@ -156,7 +156,6 @@ function learn(g) {
             const f2 = g.space.token(f.val, f.type, f.name)
             f2.exec = true
             g.dict[f2.name] = f2
-            console.dir(f2)
 
         } else {
             g.dict[f.name] = f
@@ -166,3 +165,20 @@ function learn(g) {
         log.dump(f)
     }
 }
+
+// TODO eval control should be relative and not absolute!
+function stop(g) {
+    log('pause')
+    lab.hud.gspace.mode = 0
+}
+
+function slow(g) {
+    log('moving slow')
+    lab.hud.gspace.mode = 1
+}
+
+function fast(g) {
+    log('moving fast')
+    lab.hud.gspace.mode = 1
+}
+

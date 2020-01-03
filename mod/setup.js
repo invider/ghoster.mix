@@ -161,7 +161,6 @@ module.exports = function setup() {
         text: 'step',
 
         onClick: function() {
-            log('stepping in...')
             lab.space.nextStep()
         },
 

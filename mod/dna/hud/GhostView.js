@@ -14,6 +14,7 @@ function GhostView(st) {
     this.scale = 64
     this.font = '50px coolville'
     this.font2 = '20px coolville'
+    this.font3 = '32px coolville'
 
     this.dt = 0
     this.mode = 1
@@ -38,8 +39,8 @@ GhostView.prototype.centerAt = function(gx, gy) {
     this.gx = limit(tx, 0, max(this.space.w - this.gw + 1, 0))
     this.gy = limit(ty, 0, max(this.space.h - this.gh + 1, 0))
 
-    log(`looking at ${gx}x${gy}`)
-    log(`top left is ${this.gx}x${this.gy}`)
+    //log(`looking at ${gx}x${gy}`)
+    //log(`top left is ${this.gx}x${this.gy}`)
 }
 
 GhostView.prototype.adjustViewport = function() {
@@ -75,7 +76,7 @@ GhostView.prototype.evo = function(dt) {
         const space = this.space
         function step() {
             const tasks = space.nextStep()
-            if (tasks > 0) setTimeout(step, 0)
+            if (space.mode === 2 && asks > 0) setTimeout(step, 0)
         }
         setTimeout(step, 0)
 
@@ -207,5 +208,14 @@ GhostView.prototype.draw = function() {
         }
     })
 
+    if (env.status) {
+        alignLeft()
+        baseBottom()
+        font(this.font3)
+        fill(.15, .4, .4)
+        text(env.status, 20, this.h-30)
+    }
+
     restore()
+
 }

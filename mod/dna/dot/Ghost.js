@@ -199,10 +199,14 @@ Ghost.prototype.next = function() {
 Ghost.prototype.nextStep = function() {
 
     let tasks = 0
+
     do {
         if (!this.sequence) {
-            if (!this.nextTask()) return 0
+            if (!this.nextTask()) {
+                return 0
+            }
         }
+
 
         if (this.sequence.type === this.space.token.LIST) {
             const token = this.sequence.val[this.cp++]
@@ -212,8 +216,9 @@ Ghost.prototype.nextStep = function() {
                 this.doReturn()
             }
         } else {
-            tasks += this.doToken(this.sequence)
+            const sq = this.sequence
             this.sequence = undefined
+            tasks += this.doToken(sq)
         }
 
     } while (this.sequence && !this.moved)
@@ -224,7 +229,8 @@ Ghost.prototype.nextStep = function() {
 
 Ghost.prototype.schedule = function(taskToken) {
     // TODO allow task priorities?
-    this.todo.push(taskToken)
+    this.todo.push(this.space.token(taskToken))
+    // TODO looks like a dirty rule, maybe there is a more elegant way to solve this?
     if (taskToken.type === this.space.token.LIST) taskToken.exec = true
 }
 
