@@ -167,6 +167,12 @@ function learn(g) {
     }
 }
 
+function spawn(g) {
+    log('spawning...')
+    const bootSpell = g.pop()
+    g.space.spawn(g, bootSpell)
+}
+
 // TODO eval control should be relative and not absolute!
 function stop(g) {
     log('pause')

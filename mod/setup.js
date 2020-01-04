@@ -1,24 +1,4 @@
-function setup() {
-
-    // ghost space construction
-    const space = lab.spawn(dna.dot.Space, {
-        name: 'space',
-        width: 32,
-        height: 32,
-    })
-    space.token = dna.dot.token
-
-    const inky = new dna.dot.Ghost({
-        x: 0,
-        y: 0,
-        player: 1,
-        space: space,
-    })
-    space.ghost.push(inky)
-
-    // fix dictionary
-    //generatePalette(lib.dict)
-    
+function fixDictionary() {
     // rename escaped functions like do and pow
     Object.keys(lib.dict)
         .filter(k => k.startsWith('__') && k.endsWith('__') && k.length > 4)
@@ -33,27 +13,38 @@ function setup() {
     dna.dot.item._ls.forEach(item => {
         lib.dict[item.name] = item
     })
+}
 
-    // teach inky everything
-    Object.keys(lib.dict).forEach(k => {
-        if (k === '_' || k === '__') return
-        inky.dict[k] = lib.dict[k]
+function setup() {
+
+    fixDictionary()
+
+    // ghost space construction
+    const space = lab.spawn(dna.dot.Space, {
+        name: 'space',
+        width: 32,
+        height: 32,
     })
+    space.token = dna.dot.token
 
-    // boot
+    // determine boot sequence
+    let bootSpell = $.dot.sys
     if (env.config.boot) {
-        const routines = env.config.boot.split(',')
-        routines.forEach(name => {
-            const seq = $.dot.selectOne(name)
-            if (seq) {
-                inky.schedule(seq)
-            } else {
-                log.warn(`can't find boot routine ${name}`)
-            }
-        })
-    } else {
-        inky.schedule($.dot.sys)
+        const seq = $.dot.selectOne(env.config.boot)
+        if (seq) {
+            bootSpell = seq
+        } else {
+            log.warn(`can't find boot routine ${name}`)
+        }
     }
+
+    const inky = space.spawn({
+        name: 'inky',
+        player: 1,
+        x: 0,
+        y: 0,
+        dict: lib.dict,
+    }, bootSpell)
 
     // construct the view
     const hud = lab.spawn('hud/Hud', {

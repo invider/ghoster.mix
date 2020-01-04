@@ -10,6 +10,7 @@ function Space(st) {
     this.h = st.height
 }
 
+// introduce new grid dimentions
 Space.prototype.replot = function(w, h, copy) {
     const newGrid = []
 
@@ -27,6 +28,19 @@ Space.prototype.replot = function(w, h, copy) {
     this.h = h
     this.grid = newGrid
     if (this.onReplot) this.onReplot()
+}
+
+Space.prototype.spawn = function(spawner, boot) {
+    const ghost = new dna.dot.Ghost(spawner)
+    ghost.space = this
+
+    if (boot) {
+        ghost.schedule(boot)
+        if (boot.name) ghost.name = boot.name
+    }
+    this.ghost.push(ghost)
+
+    return ghost
 }
 
 /*

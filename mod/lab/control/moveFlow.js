@@ -27,6 +27,7 @@ function init() {
     }
     this.next = function () {
         // select next ghost
+        lab.hud.gspace.nextGhost()
     }
 }
 

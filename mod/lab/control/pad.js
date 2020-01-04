@@ -92,5 +92,11 @@ function evo(dt) {
         } else {
             p.stop(p.MODE, id)
         }
+        if (d.buttons[b[10]] && d.buttons[b[10]].pressed) {
+            activate(id)
+            p.touch(p.NEXT, id)
+        } else {
+            p.stop(p.NEXT, id)
+        }
     })
 }

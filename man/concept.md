@@ -60,6 +60,7 @@ Design Decisions
 
 * Mission tree can be built from a set of portals that act as hyperlinks between maps.
 
+* The only resource is mana and on some maps it can be limited
 
 
 
@@ -74,6 +75,9 @@ Open Questions
 ? all spells are set as tokens on the map and then will be eaten later by ghosts who will learn stuff
 
 ? tokens/words/commands/spells - what is the terminology here?
+
+? mana/paint/ink/dust/powser is the only resource here?
+
 
 Story Topics
 ------------

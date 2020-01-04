@@ -8,6 +8,7 @@ define inky ghost
 and now some comments
 ----
 
+
 solar:
     -- solarized
     base03: $002b36 . >
@@ -107,7 +108,6 @@ bwww:
 learn
 
 draw
-slow
 
 wwww
 wwww
@@ -118,6 +118,21 @@ bwww
 bwww
 ^^^^^^^
 hhhh hhhh
+
+-- spawn another one
+slow
+
+belky:
+    >>
+    byellow: $b58900 . >
+    borange: $cb4b16 . >
+    bred:    $dc322f . >
+    bmagenta: $d33682 . >
+    bviolet: $6c71c4 . >
+    bblue: $268bd2 . >
+    bcyan: $2aa198 . >
+    bgreen: $859900 . >
+spawn
 
 -- do
 

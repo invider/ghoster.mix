@@ -19,6 +19,9 @@ let instances = 0
 function Ghost(st) {
     instances++
     this.name = ghostNames[instances] || ghostNames[0] + instances
+    if (st instanceof Ghost) {
+        this.source = st
+    }
 
     this.mood = EXPLORING
     this.ink = 100 // ghost mana and energy
@@ -34,7 +37,14 @@ function Ghost(st) {
 
     this.x = st.x
     this.y = st.y
-    this.space = st.space
+
+    if (st.dict) {
+        // pass the spells knowledge
+        Object.keys(st.dict).forEach(k => {
+            if (k === '_' || k === '__') return
+            this.dict[k] = st.dict[k]
+        })
+    }
 }
 
 Ghost.prototype.nextMood = function() {

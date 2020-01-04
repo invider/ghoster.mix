@@ -23,12 +23,27 @@ function GhostView(st) {
 }
 
 GhostView.prototype.follow = function(ghost) {
+
     this.target = ghost
+    if (!ghost) return // we are not following anyone
 
     const view = this
     ghost.onMove = function() {
         if (view.target !== this) return
         view.adjustViewport()
+    }
+}
+
+GhostView.prototype.nextGhost = function() {
+    if (!this.target) {
+        this.follow(this.space.ghost[0])
+    } else {
+        const i = this.space.ghost.indexOf(this.target)
+        if (i >= 0) {
+            this.follow(this.space.ghost[i+1])
+        } else {
+            this.follow(this.space.ghost[0])
+        }
     }
 }
 
