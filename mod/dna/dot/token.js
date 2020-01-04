@@ -46,7 +46,10 @@ function hex(str) {
 
 function token(val, type, name) {
     // TODO lookup in the buffer first
-    if (val instanceof Token || val.type) return val // value already tokenized
+
+    // check if already tokenized
+    if (val instanceof Token
+            || (val && val.type)) return val
 
     if (!name && (val === undefined || val === null)) {
         return TOKEN_NIL

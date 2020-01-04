@@ -59,19 +59,65 @@ draw:
     bred:    $dc322f . >
     bmagenta: $d33682 . >
     bviolet: $6c71c4 . >
-    bblue: $268bd2 . >
-    bcyan: $2aa198 . >
-    bgreen: $859900 . >
+    bblue: $268bd2 .
+    v
+    bcyan: $2aa198 . <
+    bgreen: $859900 . <
 
     v
     <<<<<<<<<<<<<<<<<<<<<<<<<<<
+learn
+
+-------------------
+hwall:
+    wall . >
+    wall . >
+    wall . >
+    wall . >
 
 learn
-draw
 
+vwall:
+    wall . v
+    wall . v
+    wall . v
+    wall . v
+learn
+-------------------
+
+wwww:
+    wall . >
+    wall . >
+    wall . >
+    wall . >
+learn
+
+hhhh:
+    wall . v
+    wall . v
+    wall . v
+    wall . v
+learn
+
+bwww:
+    wall . <
+    wall . <
+    wall . <
+    wall . <
+learn
+
+draw
 slow
 
-v wall . >>>
+wwww
+wwww
+hhhh
+hhhh
+vv
+bwww
+bwww
+^^^^^^^
+hhhh hhhh
 
 -- do
 

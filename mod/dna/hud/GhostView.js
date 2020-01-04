@@ -154,10 +154,11 @@ GhostView.prototype.draw = function() {
                 fill(token.val)
                 rect(ix*s+M, iy*s+M, s-M2, s-M2)
 
-            } else if ( token.type === dna.dot.token.SPECAIL) {
-                fill(.05, 0, .2, .6)
-                rect(ix*s, iy*s, s, s)
-                debugger
+            } else if ( token.type === dna.dot.token.SPECIAL) {
+                lineWidth(3)
+                stroke(.6, .6, .4)
+                const b = s/6
+                rect(ix*s+b, iy*s+b, s-b*2, s-b*2)
 
             } else if (token.type === dna.dot.token.NUM ) {
                 font(this.font2)

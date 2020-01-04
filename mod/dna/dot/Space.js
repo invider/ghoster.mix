@@ -40,6 +40,13 @@ Space.prototype.get = function(x, y) {
     return this.grid[y*this.w + x]
 }
 
+Space.prototype.isSolid = function(x, y) {
+    if (x < 0 || x >= this.w || y < 0 || y >= this.h) return true 
+
+    const t = this.grid[y*this.w + x]
+    return (t && t.solid);
+}
+
 Space.prototype.set = function(x, y, v, t) {
     if (x < 0 || x >= this.w || y < 0 || y >= this.h) return false
     this.grid[y*this.w + x] = this.token(v, t)

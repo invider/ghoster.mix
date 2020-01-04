@@ -9,7 +9,7 @@ function replot(g) {
 
 // #core spells
 function up(g) {
-    if (g.y > 0) {
+    if (!g.space.isSolid(g.x, g.y-1)) {
         g.y--
         g.lastMove = 1
         g.moves ++
@@ -21,7 +21,7 @@ function up(g) {
 }
 
 function down(g) {
-    if (g.y < g.space.h-1) {
+    if (!g.space.isSolid(g.x, g.y+1)) {
         g.y++
         g.lastMove = 3
         g.moves ++
@@ -33,7 +33,7 @@ function down(g) {
 }
 
 function left(g) {
-    if (g.x > 0) {
+    if (!g.space.isSolid(g.x-1, g.y)) {
         g.x--
         g.lastMove = 2
         g.moves ++
@@ -45,7 +45,7 @@ function left(g) {
 }
 
 function right(g) {
-    if (g.x < g.space.w-1) {
+    if (!g.space.isSolid(g.x+1, g.y)) {
         g.x++
         g.lastMove = 4
         g.moves ++
@@ -60,6 +60,7 @@ function dot(g) {
     if (g.tract.length > 0) {
         const t = g.pop()
         g.space.set(g.x, g.y, t)
+
     } else {
         log('tract is empty!')
     }

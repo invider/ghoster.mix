@@ -23,6 +23,8 @@ Design Decisions
 
 * the gird is discrete, a ghost/dot/token can't be in-between cells (however, a ghost movement can be animated, so it would not appear jump-teleporting)
 
+* as a consequence, ghostspace has only integer arithmetics. There is no point in fractions in this world.
+
 * ghost are running concurrently
     * one ghost is running spells until it moves
     * after it yields control to the next ghost etc
@@ -52,7 +54,11 @@ Design Decisions
     * lick mood - taste what is under ghost feets
     * pacman mood - eat everything in the path
     * spawn mood - each move spawn and place the thing on top of the stack
-    * drop mode - drop 
+    * dropy mood - drop 
+
+* Ghosts can move from map to map through open portals
+
+* Mission tree can be built from a set of portals that act as hyperlinks between maps.
 
 
 

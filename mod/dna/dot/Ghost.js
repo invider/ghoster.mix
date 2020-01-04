@@ -89,7 +89,6 @@ Ghost.prototype.doReturn = function() {
     }
     this.cp = this.istack.pop()
     this.sequence = this.cstack.pop()
-    this.cp ++
 
     return true
 }
@@ -144,8 +143,6 @@ Ghost.prototype.doToken = function(t) {
         if (env.config.trace) {
             log.raw(`@${this.name}: v${this.space.token.dump(t)}`)
         }
-        if (t.type === this.space.token.SPECIAL) console.dir(t)
-        log(t.type)
         this.tract.push(t)
     }
 
@@ -210,6 +207,7 @@ Ghost.prototype.nextStep = function() {
 
         if (this.sequence.type === this.space.token.LIST) {
             const token = this.sequence.val[this.cp++]
+
             tasks += this.doToken(token)
 
             if (this.cp >= this.sequence.val.length) {
