@@ -28,17 +28,23 @@ function isSpecial(c) {
 }
 
 function isDigit(c) {
-    const code = c.charCodeAt(0)
-    return code >= 48 && code < 58
+    const code = c.charCodeAt(0) - 48
+    return code >= 0 && code < 10
 }
 
-function dec(c) {
+function toDec(c) {
     const code = c.charCodeAt(0) - 48
     if (code >= 0 && code < 10) return code
     else return -1
 }
 
-function hex(c) {
+function isHex(c) {
+    const code = c.toUpperCase().charCodeAt(0) - 48
+    return (code >= 0 && code < 10) || (code >= 17 && code < 23)
+}
+
+
+function toHex(c) {
     const code = c.toUpperCase().charCodeAt(0) - 48
     if (code >= 0 && code < 10) return code
     else if (code >= 17 && code < 23) return code - 7
@@ -53,10 +59,6 @@ function isAlphaNum(c) {
     return !isSeparator(c) && !isSpecial(c)
 }
 
-function isHex(c) {
-    const code = c.toUpperCase().charCodeAt(0) - 48
-    return (code >= 0 && code < 10) || (code >= 17 && code < 23)
-}
 
 function makeStream(src) {
     let pos = 0
@@ -255,13 +257,13 @@ function makeLex(getc, retc, eatc, aheadc, expectc, notc, cur) {
             if (c === '0' && getc() === 'x') {
                 if (sign < 0) err("hex value can't be negative")
 
-                let d = hex(getc())
+                let d = toHex(getc())
                 if (d < 0) {
                     err('wrong number format')
                 }
                 while (d >= 0) {
                     n = n*16 + d
-                    d = hex(getc())
+                    d = toHex(getc())
                 }
                 retc()
 
@@ -284,7 +286,7 @@ function makeLex(getc, retc, eatc, aheadc, expectc, notc, cur) {
 
             } else {
                 let d = 0
-                while ((d = dec(c)) >= 0) {
+                while ((d = toDec(c)) >= 0) {
                     n = n*10 + d
                     c = getc()
                 }
