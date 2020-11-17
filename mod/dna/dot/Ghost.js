@@ -13,6 +13,7 @@ const HUNGRY = 1
 const DROPY = 2
 const SAMPLE = 3
 const LOOPY = 4
+const CONFUSED = 5
 
 let instances = 0
 
@@ -41,7 +42,7 @@ function Ghost(st) {
     if (st.dict) {
         // pass the spells knowledge
         Object.keys(st.dict).forEach(k => {
-            if (k === '_' || k === '__') return
+            if (k === '_' || k === '__' || k.startsWith('_')) return
             this.dict[k] = st.dict[k]
         })
     }
@@ -59,6 +60,7 @@ Ghost.prototype.getMood = function() {
         case DROPY: return 'dropy';
         case SAMPLE: return 'sample';
         case LOOPY: return 'loopy';
+        case CONFUSED: return 'confused';
     }
 }
 
@@ -169,6 +171,7 @@ Ghost.prototype.postMove = function() {
         case DROPY: this.doToken(tk('dot')); break;
         case SAMPLE: this.doToken(tk('lick')); break;
         case LOOPY: break;
+        case CONFUSED: break;
     }
 }
 
@@ -193,10 +196,15 @@ Ghost.prototype.next = function() {
 
     // TODO todo should not be only a sequence, but a single spell
     const token = this.sequence.val[this.cp++]
-    const tasks = this.doToken(token)
+    try {
+        const tasks = this.doToken(token)
 
-    if (this.cp >= this.sequence.val.length) {
-        this.doReturn()
+        if (this.cp >= this.sequence.val.length) {
+            this.doReturn()
+        }
+    } catch (e) {
+        this.mood = CONFUSED
+        log.err('confused: ' + e)
     }
 
     if (this.moved) this.postMove()
@@ -207,31 +215,37 @@ Ghost.prototype.nextStep = function() {
 
     let tasks = 0
 
-    do {
-        if (!this.sequence) {
-            if (!this.nextTask()) {
-                return 0
+    try {
+        do {
+            if (!this.sequence) {
+                if (!this.nextTask()) {
+                    return 0
+                }
             }
-        }
 
 
-        if (this.sequence.type === this.space.token.LIST) {
-            const token = this.sequence.val[this.cp++]
+            if (this.sequence.type === this.space.token.LIST) {
+                const token = this.sequence.val[this.cp++]
 
-            tasks += this.doToken(token)
+                tasks += this.doToken(token)
 
-            if (this.cp >= this.sequence.val.length) {
-                this.doReturn()
+                if (this.cp >= this.sequence.val.length) {
+                    this.doReturn()
+                }
+            } else {
+                const sq = this.sequence
+                this.sequence = undefined
+                tasks += this.doToken(sq)
             }
-        } else {
-            const sq = this.sequence
-            this.sequence = undefined
-            tasks += this.doToken(sq)
-        }
 
-    } while (this.sequence && !this.moved)
+        } while (this.sequence && !this.moved)
 
-    if (this.moved) this.postMove()
+        if (this.moved) this.postMove()
+
+    } catch (e) {
+        this.mood = CONFUSED
+        log.err('confused: ' + e)
+    }
     return tasks
 }
 

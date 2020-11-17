@@ -102,5 +102,6 @@ function draw() {
         text(`A: ${active[7]}`, x, y); y += 25;
         text(`B: ${active[8]}`, x, y); y += 25;
         text(`MODE: ${active[9]}`, x, y); y += 25;
+        text(`NEXT: ${active[10]}`, x, y); y += 25;
     }
 }
