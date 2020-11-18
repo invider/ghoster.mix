@@ -1,6 +1,10 @@
 const M = 10
 const DM = M*2
 
+const PAUSED = 0
+const SLOW = 1
+const FAST = 2
+
 function GhostView(st) {
     this.x = 100
     this.y = 100
@@ -17,7 +21,11 @@ function GhostView(st) {
     this.font3 = '32px coolville'
 
     this.dt = 0
-    this.mode = 1
+    this.mode = SLOW
+
+    this.PAUSED = PAUSED
+    this.SLOW = SLOW
+    this.FAST = FAST
 
     augment(this, st)
 }

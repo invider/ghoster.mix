@@ -176,16 +176,16 @@ function spawn(g) {
 // TODO eval control should be relative and not absolute!
 function stop(g) {
     log('pause')
-    lab.hud.gspace.mode = 0
+    lab.hud.gspace.mode = lab.hud.gspace.PAUSED
 }
 
 function slow(g) {
     log('moving slow')
-    lab.hud.gspace.mode = 1
+    lab.hud.gspace.mode = lab.hud.gspace.SLOW
 }
 
 function fast(g) {
     log('moving fast')
-    lab.hud.gspace.mode = 1
+    lab.hud.gspace.mode = lab.hud.gspace.FAST
 }
 

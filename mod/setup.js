@@ -214,5 +214,5 @@ function setup() {
     ghostView.gx = 4
     ghostView.gy = 1
 
-    ghostView.mode = 2
+    ghostView.mode = ghostView.FAST
 }

@@ -131,7 +131,13 @@ belky:
     bviolet: $6c71c4 . >
     bblue: $268bd2 . >
     bcyan: $2aa198 . >
-    bgreen: $859900 . >
+    bgreen: $859900 .
+    v
+    byellow: $b58900 . <
+    byellow: $b58900 . <
+    byellow: $b58900 . <
+    byellow: $b58900 . <
+
 spawn
 
 -- do
