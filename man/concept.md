@@ -1,29 +1,54 @@
-Dotter Concepts
-===============
+Dotter Concept
+==============
 
-*Behind the computer screen there are ghosts, living in the machine and moving color dots around*
+*Behind the computer screen there are ghosts living in the machine and moving color dots around*
 
 *Ghosts* - autonomous agents living inside a computer
 
-*Dots* - colored picture elements
+*Tokens* - various items used by ghosts
 
-*Tokens" - various items used by ghosts
+*Dots* - pixel tokens, colored picture elements
 
-*Grid* - a discrete space the ghost are living in
+*Grid* - a discrete space the ghost are living in, defined by width and height
 
-*Cell* - a discrete point on the grid with particular coordinates. 
+*Cell* - a discrete point on the grid defined by it's coordinates. 
 
-*Dot Space* - a world perspective, when only colored dots are observable
+*Dot Space* - represents a screen, a world perspective, when only colored dots are observable
 
 *Ghost Space* - a world perspective, when ghost and token movements are visible
 
 
-Design Decisions
-----------------
+Design Tenets
+-------------
+* dpad-only mode, keyboard/mouse is not required
+
+* touchpad mode?
+
+* mouse only mode?
+
+* self-documenting system. All hints, mission details, spell manuals and world details should be inside
+
+* a gateway mission - select other missions and teleport to other grids
+
+* game cart or image metaphor - all the state, tools, help etc is in there
+
+* like docker images - snapshot + change commands => another signed/hashed snapshot
+
+* you can select (and eat?) grid section with special markers
+
+* help can be in a form of civipedia/ufopedia grid with wise library ghosts
+
+* chatbot interface to get the useful info (and chat log like in DeusEx - so you'll never forget)
+
+* grid is dumb, tokens are static (mostly), ghosts are smart
+
+* players control ghosts
+
+* ghosts can be in multiple teams controlled by different players or AI
 
 * the gird is discrete, a ghost/dot/token can't be in-between cells (however, a ghost movement can be animated, so it would not appear jump-teleporting)
 
-* as a consequence, ghostspace has only integer arithmetics. There is no point in fractions in this world.
+* as the consequence, ghostspace has only integer arithmetics. There is no point in fractions in this world.
 
 * ghost are running concurrently
     * one ghost is running spells until it moves
@@ -60,7 +85,15 @@ Design Decisions
 
 * Mission tree can be built from a set of portals that act as hyperlinks between maps.
 
-* The only resource is mana and on some maps it can be limited
+* The only resource is cybermana and on some maps it can be limited
+
+* Colored zones to mark an area purpose
+
+* Chase mode - a ghost following/targeting a particular token or another ghots
+
+* lemmings are the ghosts wondering around and looking for immediate commands to execute - you can spawn these types (limited by the walls?)
+
+* some tricks are event sensors/triggers
 
 
 
@@ -79,10 +112,103 @@ Open Questions
 ? mana/paint/ink/dust/powser is the only resource here?
 
 
+Tokens
+------
+Tokens are the items on the grid.
+Each has potential cost in cybermana (for limited scenarios).
+
+### Token Types
+
+* nil/empty/false
+* colored dot
+* integer number
+* character
+* text/string
+* text banner/tag?
+* word - a symbol used to locate tokens in dictionary
+* spell - low-level atomic trick
+* sequence - a list of tricks
+* array
+* grid - 2d array
+* dict
+* sound sample
+* pressure plate - a way to remotely trigger the related ghost trick
+* switch
+* teleporters
+* token pathways - a way to authomatically move tokens (aka Factorio)
+
+Core Actions
+------------
+* move
+* eat
+* lick
+* paint
+* spawn
+* join
+* kill
+* capture the next/prev ghost
+* jump home
+* jump at beacon
+* sleep
+* patrol
+* guard/traffic control
+* exchange messages (bot mechanics, can be visible)
+* learn new tricks
+* forget tricks
+* capture state - make a snapshot for rollbacks
+* rewind- just jump back to the last positions and preserve map (we can save and run again)
+* restore/rollback - restore tokens, ghost placement and state (vocabulary and state)
+* forget the last save - now we can return to the previous one (or maybe the first one ever - on the world start)
+* start recording a macro
+* stop recording
+* name sequence (it should be autonamed)
+
+Core Cycle
+----------
+You load a scenario that setups the map - places tokens and ghosts.
+
+Control the ghost. To learn new tricks, lay down tokens in a row
+terminated by an imidiate trick (a logical mine).
+Than place the ghost in front of a row a launch right >>.
+It would consume until the wall/empty space
+
+
+Ghost Structure
+---------------
+
+### Ghost Profile
+
+* name
+* team color
+
+### Tract
+It is the stack that consists of what the ghost eats.
+
+### Ghost Dictionary
+Vocabulary of tricks that ghost is capable to perform.
+
+### Ghost ToDo?
+
+### Call Stack?
+
+### Ghost Log
+
+
+
+Ghost Proverbs
+--------------
+Short and poetic philosophycal principles.
+
+* ask librarian ghost for new tricks
+
+* use garbage collector to control
+
+
 Story Topics
 ------------
 
 * garbage/littering story - once a ghost is not carefull about the garbage she drops,
   and another ghosts might be confused, and the whole ghost town eventually can turn
   into a one big garbage dump
+
 

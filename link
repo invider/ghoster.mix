@@ -1,0 +1,3 @@
+#!/bin/sh
+npm link collider.mix collider-dev.mix collider-boot.mix
+
