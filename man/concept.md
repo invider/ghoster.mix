@@ -117,6 +117,11 @@ Open Questions
 
 ? cycles/mana/paint/ink/dust/powder is the only resource here?
 
+? pattern recognition
+
+? how to react on events
+
+
 
 Tokens
 ------

@@ -111,9 +111,11 @@ draw
 
 wwww
 wwww
+wwww
 hhhh
 hhhh
 vv
+bwww
 bwww
 bwww
 ^^^^^^^
@@ -137,6 +139,8 @@ belky:
     byellow: $b58900 . <
     byellow: $b58900 . <
     byellow: $b58900 . <
+    vv
+    wwww
 
 spawn
 
