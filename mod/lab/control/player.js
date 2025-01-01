@@ -38,8 +38,6 @@ function evo(dt) {
         if (lab.hud.gspace.target) {
             //&& lab.hud.gspace.target.todo.length === 0) {
             
-            if (active[10]) debugger
-
             //const flow = lab.control.flow
             const ghost = lab.hud.gspace.target
 

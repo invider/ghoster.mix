@@ -19,7 +19,7 @@ function isActive(id) {
 
 function evo(dt) {
     pad().forEach(d => {
-        if (d.index >= 4) return
+        if (d.index >= 1) return
 
         const id = d.index
         if (!bind[id]) {
