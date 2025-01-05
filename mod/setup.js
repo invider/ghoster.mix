@@ -215,4 +215,9 @@ function setup() {
     ghostView.gy = 1
 
     ghostView.mode = ghostView.FAST
+
+    // toooo early!!!
+    trap.game.on('levelUp', () => {
+        log('% leveling up')
+    })
 }
