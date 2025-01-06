@@ -39,7 +39,9 @@ DotView.prototype.createBuffer = function() {
     this.bufCanvas = document.createElement('canvas')
     this.bufCanvas.width = this.gw
     this.bufCanvas.height = this.gh
-    this.bufContext = this.bufCanvas.getContext('2d')
+    this.bufContext = this.bufCanvas.getContext('2d', {
+        willReadFrequently: true,
+    })
 }
 
 DotView.prototype.ghostX = function(x) {
