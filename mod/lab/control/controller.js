@@ -1,13 +1,14 @@
-//
-// The *controller* ghost is used to route input actions to the matching targets
-//
+/*
+ * The *controller* ghost is used to route input actions to the matching targets
+ */
 
-const OFF = 0
 
 // error messages
 const WRONG_CONTROLLER = '[controller] controller is supposed to be a positive integer'
 const WRONG_TARGET = '[controller] target is supposed to be an object'
 const WRONG_ACTION = '[controller] action is supposed to be an integer'
+
+const OFF = 0
 
 // holds actions control array for each controller
 const ctrl = []

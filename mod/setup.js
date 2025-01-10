@@ -29,8 +29,8 @@ function setup() {
 
     // determine boot sequence
     let bootSpell = $.dot.sys
-    if (env.config.boot) {
-        const seq = $.dot.selectOne(env.config.boot)
+    if (env.config.bootstrap) {
+        const seq = $.dot.selectOne(env.config.bootstrap)
         if (seq) {
             bootSpell = seq
         } else {
@@ -215,9 +215,4 @@ function setup() {
     ghostView.gy = 1
 
     ghostView.mode = ghostView.FAST
-
-    // toooo early!!!
-    trap.game.on('levelUp', () => {
-        log('% leveling up')
-    })
 }
