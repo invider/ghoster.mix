@@ -1,5 +1,6 @@
 const MAX_CONTROLLERS = 8
-const KEYBOARD_CONTROLLERS_BASE = 5
+const GAMEPAD_CONTROLLERS_BASE  = 1 // gamepad controllers usually indexed from 1..4
+const KEYBOARD_CONTROLLERS_BASE = 5 // keyboard controllers are indexed from 5..
 
 const UP     = 1    // movement
 const LEFT   = 2
@@ -52,7 +53,14 @@ const fixed = {
     rewind:         'Comma',
 }
 
-// keyboard players mapping
+// keyboard controllers mapping
+//
+// Each subarray defines the next controller starting from ```KEYBOARD_CONTROLLERS_BASE```
+// (e.g. with ```KEYBOARD_CONTROLLERS_BASE = 5```, these will be mapped to controllers 5, 6, 7...).
+//
+// Each entry maps an action #N to a particular key event code.
+// A missing entry or an empty string means there is no key mapping for this particular action.
+//
 const keyboardControllersMapping = [
     // quaker
     [ 'KeyW', 'KeyA', 'KeyS', 'KeyD',
