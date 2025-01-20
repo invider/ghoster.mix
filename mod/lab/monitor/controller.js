@@ -2,11 +2,10 @@
  * The *controller* ghost is used to route input actions to the matching targets
  */
 
-
 // error messages
-const WRONG_CONTROLLER = '[controller] controller is supposed to be a positive integer'
-const WRONG_TARGET = '[controller] target is supposed to be an object'
-const WRONG_ACTION = '[controller] action is supposed to be an integer'
+const WRONG_CONTROLLER_ID = '[controller] controllerId is supposed to be a positive integer'
+const WRONG_ACTION        = '[controller] wrong action definition object'
+const WRONG_TARGET        = '[controller] target is supposed to be an object'
 
 const OFF = 0
 
@@ -19,14 +18,15 @@ let targetMap = []
 const targetMapStack = []
 
 // bind the controller to the target
-// @param {number/1+} controller - controller id
+//
+// @param {number/1+} controllerId
 // @param {object} target - a target object to bind to the controller
-function bind(controller, target) {
-    if (!controller || !isNumber(controller) || controller < 1) throw WRONG_CONTROLLER 
+function bind(controllerId, target) {
+    if (!controllerId || !isNumber(controllerId) || controllerId < 1) throw WRONG_CONTROLLER_ID
     if (!target || !isObj(target)) throw WRONG_TARGET
 
-    target._controller = controller
-    const icontroller = controller - 1
+    target._controllerId = controllerId
+    const icontroller = controllerId - 1
 
     targetMap[icontroller] = target
     if (!ctrl[icontroller]) ctrl[icontroller] = [] // initialize actions control array if missing
@@ -34,11 +34,11 @@ function bind(controller, target) {
 
 // deactivate all actions for the provided controller
 //
-// @param {number/1+} controller - controller id
-function deactivateAllActions(controller) {
-    if (!controller || !isNumber(controller) || controller < 1) throw WRONG_CONTROLLER 
+// @param {number/1+} controllerId
+function deactivateAllActions(controllerId) {
+    if (!controllerId || !isNumber(controllerId) || controllerId < 1) throw WRONG_CONTROLLER_ID
 
-    const icontroller = controller - 1
+    const icontroller = controllerId - 1
     const target = targetMap[icontroller]
     if (target && target.deactivate) {
         const triggers = ctrl[icontroller] || []
@@ -52,16 +52,15 @@ function deactivateAllActions(controller) {
 
 // release the controller
 //
-// @param {number/1+} controller - controller id
+// @param {number/1+} controllerId
 // @returns {boolean} - true if the target was found, false otherwise
-function release(controller) {
-    if (!controller || !isNumber(controller) || controller < 1) throw WRONG_CONTROLLER 
-    if (!isNumber(action)) throw WRONG_CONTROLLER 
+function release(controllerId) {
+    if (!controllerId || !isNumber(controllerId) || controllerId < 1) throw WRONG_CONTROLLER_ID
 
-    const icontroller = controller - 1
+    const icontroller = controllerId - 1
     const target = targetMap[icontroller]
     if (target) {
-        deactivateAll(controller) // need to deactivate all triggered actions before release
+        deactivateAll(controllerId) // need to deactivate all triggered actions before release
         target._controller = 0
         targetMap[icontroller] = false
         return true
@@ -83,8 +82,8 @@ function bindAll(target) {
 
 // release all controllers
 function releaseAll() {
-    for (let i = 0; i < env.bind.MAX_CONTROLLERS; i++) {
-        release(i)
+    for (let cid = 1; cid <= env.bind.MAX_CONTROLLERS; cid++) {
+        release(cid)
     }
 }
 
@@ -107,8 +106,8 @@ function restoreTargetMap() {
 
 // find the next free controller
 //
-// @returns {number} - controller id, 0 if none were found
-function findNext() {
+// @returns {number} - controllerId, 0 if none were found
+function nextFree() {
     for (let icontroller = 0; icontroller < env.bind.MAX_CONTROLLERS; icontroller++) {
         if (!targetMap[icontroller]) return icontroller + 1
     }
@@ -120,10 +119,10 @@ function findNext() {
 // @param {object} target
 // @returns {number} - id of the binded controller, 0 if none were found
 function bindNext(target) {
-    const controller = this.findNext()
-    if (controller === 0) return 0 // no free controllers left
-    this.bind(controller, target)
-    return controller
+    const controllerId = this.findNext()
+    if (controllerId === 0) return 0 // no free controllers left
+    this.bind(controllerId, target)
+    return controllerId
 }
 
 // get the target for the specified controller
@@ -140,16 +139,19 @@ function target(controller) {
 //
 // @param {number} action
 // @param {number/1+} controller
-function act(action, controller) {
+function act(action, sourceEvent) {
     if (this.disabled) return
-    if (!isNumber(action)) throw WRONG_ACTION
-    if (!controller || !isNumber(controller) || controller < 1) throw WRONG_CONTROLLER 
+    if (!action) throw WRONG_ACTION
 
-    const icontroller = controller - 1
+    const actionId     = action.id
+    const controllerId = action.controllerId
+    if (!controllerId || !isNumber(controllerId) || controllerId < 1) throw WRONG_CONTROLLER_ID
+
+    const icontroller = controllerId - 1
 
     if (ctrl[icontroller]) {
         if (!ctrl[icontroller][action]) {
-            ctrl[icontroller][action] = env.time
+            ctrl[icontroller][action] = env.realTime
 
             const target = targetMap[icontroller]
             if (target) {
@@ -162,7 +164,7 @@ function act(action, controller) {
             }
         }
     }  else {
-        trap('capture', controller)
+        trap('capture', action)
     }
 
     if (this.__.combo) this.__.combo.register(action, controller)
@@ -172,19 +174,22 @@ function act(action, controller) {
 //
 // @param {number} action
 // @param {number/1+} controller
-function stop(action, controller) {
+function stop(action, sourceEvent) {
     if (this.disabled) return
-    if (!isNumber(action)) throw WRONG_ACTION
-    if (!controller || !isNumber(controller) || controller < 1) throw WRONG_CONTROLLER 
+    if (!action) throw WRONG_ACTION
 
-    const icontroller = controller - 1
+    const actionId     = action.id
+    const controllerId = action.controllerId
+    if (!controllerId || !isNumber(controllerId) || controllerId < 1) throw WRONG_CONTROLLER_ID
+
+    const icontroller = controllerId - 1
 
     if (ctrl[icontroller]) {
         const started = ctrl[icontroller][action]
         if (started) {
             const target = targetMap[icontroller]
             if (target && target.deactivate && !target.disabled) {
-                target.deactivate(action, env.time - started)
+                target.deactivate(action, env.realTime - started)
             }
         }
         ctrl[icontroller][action] = OFF
@@ -198,11 +203,10 @@ function evo(dt) {
                 if (ctrl[controller][action]) {
                     const target = targetMap[controller]
                     if (target && target.act && !target.disabled) {
-                        target.act(action, dt, env.time - ctrl[p][action])
+                        target.act(action, dt, env.realTime - ctrl[p][action])
                     }
                 }
             }
         }
     }
 }
-

@@ -12,14 +12,14 @@ function init() {
         if (e.repeat) return
         const controllerAction = env.bind.keyMap[e.code]
         if (controllerAction) {
-            lab.monitor.controller.act(controllerAction.action.id + 1, controllerAction.controller)
+            lab.monitor.controller.act(controllerAction, e)
         }
     })
     trap.on('keyUp', (e) => {
         if (e.repeat) return
         const controllerAction = env.bind.keyMap[e.code]
         if (controllerAction) {
-            lab.monitor.controller.stop(controllerAction.action.id + 1, controllerAction.controller)
+            lab.monitor.controller.stop(controllerAction, e)
         }
     })
 }

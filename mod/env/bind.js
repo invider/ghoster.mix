@@ -1,4 +1,4 @@
-const MAX_CONTROLLERS = 8
+const MAX_CONTROLLERS           = 8
 const GAMEPAD_CONTROLLERS_BASE  = 1 // gamepad controllers usually indexed from 1..4
 const KEYBOARD_CONTROLLERS_BASE = 5 // keyboard controllers are indexed from 5..
 
@@ -17,6 +17,7 @@ const R2     = 12
 const MENU   = 13   // menu
 const SELECT = 14
 
+// list of action names
 const actions = [
     'UP',
     'LEFT',
@@ -61,6 +62,8 @@ const fixed = {
 // Each entry maps an action #N to a particular key event code.
 // A missing entry or an empty string means there is no key mapping for this particular action.
 //
+// ```indexKeyActions``` *MUST* be run every time this table changes to consolidate the mapping.
+//
 const keyboardControllersMapping = [
     // quaker
     [ 'KeyW', 'KeyA', 'KeyS', 'KeyD',
@@ -101,21 +104,19 @@ const combos = {
 }
 
 function init() {
-    indexKeys()
+    indexKeyActions()
 }
 
-function indexKeys() {
+function indexKeyActions() {
     for (let keyboardController = 0; keyboardController < keyboardControllersMapping.length; keyboardController++) {
         const keyActions = keyboardControllersMapping[keyboardController]
         for (let actionId = 0; actionId < keyActions.length; actionId++) {
             const key = keyActions[actionId]
             if (key) {
                 keyMap[key] = {
-                    action: {
-                        id:   actionId,
-                        name: actionName(actionId),
-                    },
-                    controller: KEYBOARD_CONTROLLERS_BASE + keyboardController,
+                    id:           actionId,
+                    name:         actionName(actionId),
+                    controllerId: KEYBOARD_CONTROLLERS_BASE + keyboardController,
                 }
             }
         }
@@ -130,7 +131,8 @@ function actionId(name) {
     return actions.indexOf(name)
 }
 
+// *MUST* be run every time ```keyboardControllersMapping``` table changes
 function onRemap() {
-    indexKeys()
+    indexKeyActions()
 }
 
