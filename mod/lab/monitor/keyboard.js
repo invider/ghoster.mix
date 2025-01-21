@@ -19,7 +19,7 @@ function init() {
         if (e.repeat) return
         const controllerAction = env.bind.keyMap[e.code]
         if (controllerAction) {
-            lab.monitor.controller.stop(controllerAction, e)
+            lab.monitor.controller.deactivate(controllerAction, e)
         }
     })
 }

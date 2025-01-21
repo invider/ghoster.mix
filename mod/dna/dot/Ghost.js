@@ -256,6 +256,18 @@ Ghost.prototype.schedule = function(taskToken) {
     if (taskToken.type === this.space.token.LIST) taskToken.exec = true
 }
 
+Ghost.prototype.activate = function(action) {
+    log('#action: ' + action.id + ' - ' + action.name)
+}
+
+Ghost.prototype.act = function(action) {
+    //log('>action: ' + action.id + ' - ' + action.name)
+}
+
+Ghost.prototype.deactivate = function(action) {
+    log('!action: ' + action.id + ' - ' + action.name)
+}
+
 /*
 Ghost.prototype.exec = function(t) {
     t(this)

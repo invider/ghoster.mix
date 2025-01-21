@@ -25,11 +25,13 @@ function bind(controllerId, target) {
     if (!controllerId || !isNumber(controllerId) || controllerId < 1) throw WRONG_CONTROLLER_ID
     if (!target || !isObj(target)) throw WRONG_TARGET
 
-    target._controllerId = controllerId
+    release(controllerId)
+
     const icontroller = controllerId - 1
 
     targetMap[icontroller] = target
     if (!ctrl[icontroller]) ctrl[icontroller] = [] // initialize actions control array if missing
+    target._controllerId = controllerId
 }
 
 // deactivate all actions for the provided controller
@@ -60,7 +62,7 @@ function release(controllerId) {
     const icontroller = controllerId - 1
     const target = targetMap[icontroller]
     if (target) {
-        deactivateAll(controllerId) // need to deactivate all triggered actions before release
+        deactivateAllActions(controllerId) // need to deactivate all triggered actions before release
         target._controller = 0
         targetMap[icontroller] = false
         return true
@@ -156,7 +158,7 @@ function act(action, sourceEvent) {
             const target = targetMap[icontroller]
             if (target) {
                 if (target.activate && !target.disabled) {
-                    target.activate(action)
+                    target.activate(action, sourceEvent)
                 }
             } else {
                 // no target binded, try to capture the controller
@@ -174,7 +176,7 @@ function act(action, sourceEvent) {
 //
 // @param {number} action
 // @param {number/1+} controller
-function stop(action, sourceEvent) {
+function deactivate(action, sourceEvent) {
     if (this.disabled) return
     if (!action) throw WRONG_ACTION
 
