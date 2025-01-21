@@ -86,23 +86,3 @@ function evo(dt) {
     }
 }
 
-function draw() {
-    if (env.config.control) {
-        font('24px coolville')
-        alignLeft()
-        let x = 20
-        let y = 20
-
-        fill(.1, 1, 1)
-        text(`up: ${active[1]}`, x, y); y += 25;
-        text(`left: ${active[2]}`, x, y); y += 25;
-        text(`down: ${active[3]}`, x, y); y += 25;
-        text(`right: ${active[4]}`, x, y); y += 25;
-        text(`Y: ${active[5]}`, x, y); y += 25;
-        text(`X: ${active[6]}`, x, y); y += 25;
-        text(`A: ${active[7]}`, x, y); y += 25;
-        text(`B: ${active[8]}`, x, y); y += 25;
-        text(`MODE: ${active[9]}`, x, y); y += 25;
-        text(`NEXT: ${active[10]}`, x, y); y += 25;
-    }
-}
