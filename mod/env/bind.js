@@ -113,11 +113,11 @@ function indexKeyActions() {
         for (let actionId = 0; actionId < keyActions.length; actionId++) {
             const key = keyActions[actionId]
             if (key) {
-                keyMap[key] = {
+                keyMap[key] = Object.freeze({
                     id:           actionId,
                     name:         actionName(actionId),
                     controllerId: KEYBOARD_CONTROLLERS_BASE + keyboardController,
-                }
+                })
             }
         }
     }
