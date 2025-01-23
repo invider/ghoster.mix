@@ -12,6 +12,8 @@ const OFF = 0
 // holds actions control array for each controller
 const ctrl = []
 
+const ctrlActionCache = []
+
 // targets are recepients of action events
 let targetMap = []
 // a buffer used to temporary store existing target maps (e.g when switching the state)
@@ -137,7 +139,7 @@ function target(controller) {
     return targetMap[icontroller]
 }
 
-// start the controller action
+// activate or continue the controller action
 //
 // @param {number} action
 // @param {number/1+} controller
@@ -152,8 +154,12 @@ function act(action, sourceEvent) {
     const icontroller = controllerId - 1
 
     if (ctrl[icontroller]) {
-        if (!ctrl[icontroller][action]) {
-            ctrl[icontroller][action] = env.realTime
+        if (!ctrl[icontroller][actionId]) {
+            ctrl[icontroller][actionId] = env.realTime
+            if (!ctrlActionCache[icontroller]) {
+                ctrlActionCache[icontroller] = []
+            }
+            ctrlActionCache[icontroller][actionId] = action
 
             const target = targetMap[icontroller]
             if (target) {
@@ -187,25 +193,29 @@ function deactivate(action, sourceEvent) {
     const icontroller = controllerId - 1
 
     if (ctrl[icontroller]) {
-        const started = ctrl[icontroller][action]
+        const started = ctrl[icontroller][actionId]
         if (started) {
             const target = targetMap[icontroller]
             if (target && target.deactivate && !target.disabled) {
                 target.deactivate(action, env.realTime - started)
             }
         }
-        ctrl[icontroller][action] = OFF
+        ctrl[icontroller][actionId] = OFF
     }
 }
 
 function evo(dt) {
     for (let controller = 0; controller < ctrl.length; controller++) {
         if (ctrl[controller]) {
-            for (let action = 0; action < ctrl[controller].length; action++) {
-                if (ctrl[controller][action]) {
+            for (let actionId = 0; actionId < ctrl[controller].length; actionId++) {
+                if (ctrl[controller][actionId]) {
                     const target = targetMap[controller]
                     if (target && target.act && !target.disabled) {
-                        target.act(action, dt, env.realTime - ctrl[p][action])
+                        target.act(
+                            ctrlActionCache[controller][actionId],
+                            dt,
+                            env.realTime - ctrl[controller][actionId]
+                        )
                     }
                 }
             }

@@ -260,8 +260,8 @@ Ghost.prototype.activate = function(action) {
     log('#action: ' + action.id + ' - ' + action.name)
 }
 
-Ghost.prototype.act = function(action) {
-    //log('>action: ' + action.id + ' - ' + action.name)
+Ghost.prototype.act = function(action, dt, hold) {
+    log('>action: ' + action.id + ' - ' + action.name + ' -> ' + hold)
 }
 
 Ghost.prototype.deactivate = function(action) {
