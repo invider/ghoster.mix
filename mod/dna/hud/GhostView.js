@@ -59,8 +59,8 @@ GhostView.prototype.centerAt = function(gx, gy) {
     const tx = gx - floor(this.gw/2)
     const ty = gy - floor(this.gh/2)
 
-    this.gx = limit(tx, 0, max(this.space.w - this.gw + 1, 0))
-    this.gy = limit(ty, 0, max(this.space.h - this.gh + 1, 0))
+    this.gx = clamp(tx, 0, max(this.space.w - this.gw + 1, 0))
+    this.gy = clamp(ty, 0, max(this.space.h - this.gh + 1, 0))
 
     //log(`looking at ${gx}x${gy}`)
     //log(`top left is ${this.gx}x${this.gy}`)
@@ -72,11 +72,11 @@ GhostView.prototype.adjustViewport = function() {
     if (this.gy+1 > this.target.y) this.gy = max(this.target.y - 1, 0)
 
     if (this.gx + this.gw-b < this.target.x) {
-        this.gx = limit(this.target.x - this.gw+b, 0,
+        this.gx = clamp(this.target.x - this.gw+b, 0,
             this.space.w - this.gw + 1)
     }
     if (this.gy + this.gh-b < this.target.y) {
-        this.gy = limit(this.target.y - this.gh+b, 0,
+        this.gy = clamp(this.target.y - this.gh+b, 0,
             this.space.h - this.gh + 1)
     }
 }
